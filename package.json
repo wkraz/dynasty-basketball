@@ -1,0 +1,12 @@
+{
+  "name": "keeptradecut",
+  "version": "1.0.0",
+  "description": "## Overview This project is a web application for dynasty fantasy basketball enthusiasts. It is heavily based on the KeepTradeCut dynasty football website. It provides player rankings, a trade calculator, and a Keep/Trade/Cut game to help managers make informed decisions about their teams. The rankings are fully crowdsourced and managed through the website.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
