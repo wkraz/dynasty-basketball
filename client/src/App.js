@@ -8,8 +8,10 @@ import Calculator from './pages/Calculator';
 import AddPlayer from './pages/AddPlayer';
 // Import Game component when it's created
 // import Game from './pages/Game';
+import { anotherSharedFunction } from '../../src/sharedModule.js';
 
 function App() {
+  // Use anotherSharedFunction as needed
   return (
     <Router>
       <div className="App">

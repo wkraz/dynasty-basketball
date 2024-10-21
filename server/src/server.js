@@ -3,6 +3,7 @@ const app = express();
 const http = require('http');
 const playerRoutes = require('./routes/playerRoutes');
 const tradeRoutes = require('./routes/tradeRoutes');
+const sharedModule = require('../../src/sharedModule');
 
 const port = process.env.PORT || 3000;
 app.set('port', port);
