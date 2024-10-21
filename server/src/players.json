@@ -1,0 +1,37 @@
+[
+  {
+    "name": "LeBron James",
+    "team": "Los Angeles Lakers",
+    "positions": ["SF", "PF"],
+    "birthday": "1984-12-30",
+    "value": 9000
+  },
+  {
+    "name": "Stephen Curry",
+    "team": "Golden State Warriors",
+    "positions": ["PG"],
+    "birthday": "1988-03-14",
+    "value": 8500
+  },
+  {
+    "name": "Giannis Antetokounmpo",
+    "team": "Milwaukee Bucks",
+    "positions": ["PF", "C"],
+    "birthday": "1994-12-06",
+    "value": 9200
+  },
+  {
+    "name": "Luka Doncic",
+    "team": "Dallas Mavericks",
+    "positions": ["PG", "SG"],
+    "birthday": "1999-02-28",
+    "value": 9100
+  },
+  {
+    "name": "Nikola Jokic",
+    "team": "Denver Nuggets",
+    "positions": ["C"],
+    "birthday": "1995-02-19",
+    "value": 9300
+  }
+]

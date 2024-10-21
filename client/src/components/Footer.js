@@ -20,8 +20,8 @@ function Footer() {
         </div>
         <div className="footer-section">
           <h3>Contact</h3>
-          <p>Email: contact@fantasybasketballhelper.com</p>
-          <p>Twitter: @FantasyBBHelper</p>
+          <p>Email: wkrzastek05@gmail.com</p>
+          <p>Twitter: @willkraz</p>
         </div>
       </div>
       <div className="footer-bottom">

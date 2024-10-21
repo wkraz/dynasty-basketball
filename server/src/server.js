@@ -3,7 +3,7 @@ const app = express();
 const http = require('http');
 const playerRoutes = require('./routes/playerRoutes');
 const tradeRoutes = require('./routes/tradeRoutes');
-const sharedModule = require('../../src/sharedModule');
+const { exampleSharedFunction } = require('../../src/sharedModule');
 
 const port = process.env.PORT || 3000;
 app.set('port', port);
@@ -14,6 +14,14 @@ app.use(express.json());
 // Routes
 app.use('/api/players', playerRoutes);
 app.use('/api/trades', tradeRoutes);
+
+app.get('/api/players', (req, res) => {
+  res.json({ message: 'This will return player data in the future' });
+});
+
+app.get('/api/trades', (req, res) => {
+  res.json({ message: 'This will return trade data in the future' });
+});
 
 const server = http.createServer(app);
 
@@ -52,3 +60,11 @@ function onListening() {
     : 'port ' + addr.port;
   console.log('Listening on ' + bind);
 }
+
+// You can now use exampleSharedFunction in your server code
+exampleSharedFunction();
+
+// Basic route for the root path
+app.get('/', (req, res) => {
+  res.send('Hello from the server!');
+});
