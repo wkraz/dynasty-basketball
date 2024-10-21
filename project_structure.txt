@@ -1,27 +1,35 @@
+client/
+  src/
+    components/
+      Header.js - Navigation and site header
+      Footer.js - Site footer with links and info
+      PlayerRanking.js - Component to display individual player rankings
+      TradeCalculator.js - Component for trade value calculations
+      KeepTradeCut.js - Component for the Keep/Trade/Cut game
+    pages/
+      Home.js - Landing page with site overview
+      Rankings.js - Full player rankings page
+      Calculator.js - Trade calculator page
+      AddPlayer.js - Page to add new players to the database
+      Game.js - Keep/Trade/Cut game page
+    utils/
+      rankingAlgorithm.js - Logic for calculating player rankings
+      playerSelection.js - Logic for selecting players for the game
+      tradeLogic.js - Functions for evaluating trades
+    App.js - Main React component
+    index.js - Entry point for the React app
+    styles.css - Global styles
+  public/
+    index.html - HTML template
+
+server/
+  src/
+    api/
+      fetchPlayers.js - API calls to retrieve player data
+      updateRankings.js - API calls to update player rankings
+      addPlayer.js - API call to add new players
+
 src/
-  components/
-    Header.js - Navigation and site header
-    Footer.js - Site footer with links and info
-    PlayerRanking.js - Component to display individual player rankings
-    TradeCalculator.js - Component for trade value calculations
-    KeepTradeCut.js - Component for the Keep/Trade/Cut game
-  pages/
-    Home.js - Landing page with site overview
-    Rankings.js - Full player rankings page
-    Calculator.js - Trade calculator page
-    AddPlayer.js - Page to add new players to the database
-    Game.js - Keep/Trade/Cut game page
-  utils/
-    rankingAlgorithm.js - Logic for calculating player rankings
-    playerSelection.js - Logic for selecting players for the game
-    tradeLogic.js - Functions for evaluating trades
-  api/
-    fetchPlayers.js - API calls to retrieve player data
-    updateRankings.js - API calls to update player rankings
-    addPlayer.js - API call to add new players
-  App.js - Main React component
-  index.js - Entry point for the React app
-  styles.css - Global styles
-public/
-  index.html - HTML template
+  // Any shared code between client and server, if applicable
+
 README.md - Project documentation
