@@ -12,7 +12,7 @@ This project is a web application for dynasty fantasy basketball enthusiasts. It
 ## Technology Stack
 - Frontend: React.js
 - Backend: Node.js with Express.js
-- Database: MongoDB (suggested)
+- Database: MongoDB
 - API: RESTful API for player data and rankings
 
 ## Project Structure
