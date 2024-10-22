@@ -16,6 +16,34 @@ This project is a web application for dynasty fantasy basketball enthusiasts. It
 - API: RESTful API for player data and rankings
 
 ## Project Structure
+- client
+     - public
+        - index.html
+        - json
+     - node_modules
+     - src
+        - api js scripts
+        - components/styles and pages
+        - app.js - react based
+     - package.json 
+- server
+     - node_modules
+     - src
+        - controllers, models, routes (for each page)
+        - venv
+        - app.js - express.js based
+        - nba_players.csv & nba_players.json & csv_to_json.py (csv from internet -> json used for mongodb)
+        - server.js - express.js based again
+     - package.json
+- src
+     - constants
+     - types
+     - helpers
+     - index.js
+     - sharedModule.js
+- .gitIgnore
+- package.json
+- README   
 
 ## Getting Started
 1. Clone the repository
