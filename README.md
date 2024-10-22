@@ -31,6 +31,13 @@ This project is a web application for dynasty fantasy basketball enthusiasts. It
    ```
    npm run dev
    ```
+## TODO
+- Implement Keep/Trade/Cut game
+     - Figure out formula for continuously updating value (try and not have to rewrite entire json file)
+- Make home page nice
+     - Add an about section
+- Improve CSS and JS animations (maybe) -> make it look like an actual website
+- Look at more features once the above three are done (maybe league analyzer via sleeper API)
 
 ## Contributing
 (Add contribution guidelines here)
