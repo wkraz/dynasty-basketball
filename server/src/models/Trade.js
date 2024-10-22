@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const tradeSchema = new mongoose.Schema({
   player1: {
@@ -50,5 +50,4 @@ const tradeSchema = new mongoose.Schema({
 
 const Trade = mongoose.model('Trade', tradeSchema);
 
-module.exports = Trade;
-
+export default Trade;

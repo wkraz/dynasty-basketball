@@ -1,12 +1,11 @@
-const express = require('express');
-const app = express();
-const http = require('http');
-const playerRoutes = require('./routes/playerRoutes');
-const tradeRoutes = require('./routes/tradeRoutes');
-const { exampleSharedFunction } = require('../../src/sharedModule');
+import express from 'express';
+import http from 'http';
+import playerRoutes from './routes/playerRoutes.js';
+import tradeRoutes from './routes/tradeRoutes.js';
 
-const port = process.env.PORT || 3000;
-app.set('port', port);
+const app = express();
+const PORT = process.env.PORT || 3000;
+app.set('port', PORT);
 
 // Middleware
 app.use(express.json());
@@ -25,7 +24,7 @@ app.get('/api/trades', (req, res) => {
 
 const server = http.createServer(app);
 
-server.listen(port);
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 server.on('error', onError);
 server.on('listening', onListening);
 
@@ -34,9 +33,9 @@ function onError(error) {
     throw error;
   }
 
-  const bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+  const bind = typeof PORT === 'string'
+    ? 'Pipe ' + PORT
+    : 'Port ' + PORT;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -62,7 +61,7 @@ function onListening() {
 }
 
 // You can now use exampleSharedFunction in your server code
-exampleSharedFunction();
+// exampleSharedFunction();
 
 // Basic route for the root path
 app.get('/', (req, res) => {

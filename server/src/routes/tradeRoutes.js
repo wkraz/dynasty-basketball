@@ -1,6 +1,7 @@
-const express = require('express');
+import express from 'express';
+import * as tradeController from '../controllers/tradeController.js';
+
 const router = express.Router();
-const tradeController = require('../controllers/tradeController');
 
 // GET all trades
 router.get('/', tradeController.getAllTrades);
@@ -17,5 +18,4 @@ router.put('/:id', tradeController.updateTrade);
 // DELETE a trade
 router.delete('/:id', tradeController.deleteTrade);
 
-module.exports = router;
-
+export default router;

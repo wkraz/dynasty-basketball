@@ -1,0 +1,55 @@
+.player-ranking {
+  background-color: var(--content-background);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.position-filters {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.position-filters label {
+  margin: 0 10px 10px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.position-filters input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+.player-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.player-item {
+  background-color: var(--secondary-color);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 15px;
+  margin-bottom: 10px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.player-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.player-name {
+  font-weight: bold;
+  color: var(--text-color);
+  margin-bottom: 5px;
+}
+
+.player-details {
+  font-size: 0.9em;
+  color: var(--text-color);
+  opacity: 0.8;
+}

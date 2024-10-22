@@ -1,9 +1,41 @@
-const express = require('express');
+import express from 'express';
+import { MongoClient } from 'mongodb';
+import * as playerController from '../controllers/playerController.js';
+
 const router = express.Router();
-const playerController = require('../controllers/playerController');
+
+let client;
+let db;
+
+// Initialize MongoDB connection
+async function connectToDatabase() {
+  const url = 'mongodb://localhost:27017';
+  const dbName = 'keeptradecut';
+  client = new MongoClient(url);
+  
+  try {
+    await client.connect();
+    console.log('Connected to MongoDB');
+    db = client.db(dbName);
+  } catch (error) {
+    console.error('Failed to connect to MongoDB:', error);
+    process.exit(1);
+  }
+}
+
+connectToDatabase();
 
 // GET all players
-router.get('/', playerController.getAllPlayers);
+router.get('/', async (req, res) => {
+  try {
+    const collection = db.collection('nba_players');
+    const players = await collection.find({}).toArray();
+    res.json(players);
+  } catch (error) {
+    console.error('Error fetching players:', error);
+    res.status(500).json({ error: 'Internal server error', details: error.message });
+  }
+});
 
 // GET a single player by ID
 router.get('/:id', playerController.getPlayerById);
@@ -17,5 +49,4 @@ router.put('/:id', playerController.updatePlayer);
 // DELETE a player
 router.delete('/:id', playerController.deletePlayer);
 
-module.exports = router;
-
+export default router;

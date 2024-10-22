@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Rankings from './pages/Rankings';
 import Calculator from './pages/Calculator';
 import AddPlayer from './pages/AddPlayer';
+import './styles/global.css';
 import { someFunction } from './sharedModule';
 import { anotherSharedFunction } from './sharedModule';
 
