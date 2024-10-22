@@ -1,9 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import PlayerSearch from './PlayerSearch';
 
 const TradeCalculator = () => {
+  const [allPlayers, setAllPlayers] = useState([]);
   const [team1, setTeam1] = useState([]);
   const [team2, setTeam2] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchPlayers = async () => {
+      try {
+        const response = await axios.get('/api/players');
+        setAllPlayers(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching players:', error);
+        setError('Failed to fetch players. Please try again later.');
+        setLoading(false);
+      }
+    };
+
+    fetchPlayers();
+  }, []);
 
   const calculateValueAdjustments = () => {
     const difference = Math.abs(team1.length - team2.length);
@@ -71,10 +91,25 @@ const TradeCalculator = () => {
     }
   };
 
+  const renderPlayerList = (teamNumber) => (
+    <div>
+      <h3>Available Players</h3>
+      <div style={{ maxHeight: '300px', overflowY: 'scroll' }}>
+        {allPlayers.map((player) => (
+          <div key={player._id}>
+            {player.name} ({player.value})
+            <button onClick={() => addPlayer(player, teamNumber)}>Add</button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
   const renderTeam = (team, teamPlayers, adjustments) => (
     <div>
       <h2>Team {team}</h2>
-      <PlayerSearch onSelect={(player) => addPlayer(player, team)} />
+      {renderPlayerList(team)}
+      <h3>Selected Players</h3>
       {teamPlayers.map((player, index) => (
         <div key={index}>
           {player.name} ({player.value})
@@ -89,6 +124,9 @@ const TradeCalculator = () => {
       </div>
     </div>
   );
+
+  if (loading) return <div>Loading players...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
     <div>

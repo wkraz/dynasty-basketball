@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const helmet = require('helmet');
+const { MongoClient } = require('mongodb');
 
 const app = express();
 
@@ -28,6 +29,26 @@ app.use('/api/rankings', rankingsRoutes);
 const tradeCalculatorRoutes = require('./routes/tradeCalculatorRoutes');
 app.use('/api/trade-calculator', tradeCalculatorRoutes);
 
+app.get('/api/players', async (req, res) => {
+  const url = 'mongodb://localhost:27017';
+  const dbName = 'keeptradecut';
+  const client = new MongoClient(url);
+  
+  try {
+    await client.connect();
+    const db = client.db(dbName);
+    const collection = db.collection('nba_players');
+    
+    const players = await collection.find({}).toArray();
+    res.json(players);
+  } catch (error) {
+    console.error('Error fetching players:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  } finally {
+    await client.close();
+  }
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
@@ -35,4 +56,3 @@ app.use((err, req, res, next) => {
 });
 
 module.exports = app;
-
