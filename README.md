@@ -47,7 +47,7 @@ This project is a web application for dynasty fantasy basketball enthusiasts. It
 
 ## Getting Started
 1. Clone the repository
-2. Install dependencies:
+2. Install dependencies (node.js based so use `npm`):
    ```
    npm install
    cd client && npm install
@@ -55,10 +55,11 @@ This project is a web application for dynasty fantasy basketball enthusiasts. It
    ```
 3. Set up your MongoDB database
 4. Create a `.env` file in the server directory with your configuration
-5. Start the development servers:
+5. Start the development servers (client & server in 2 separate terminals):
    ```
    npm run dev
    ```
+   
 ## TODO
 - Implement Keep/Trade/Cut game
      - Figure out formula for continuously updating value (try and not have to rewrite entire json file)
