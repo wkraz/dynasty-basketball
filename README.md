@@ -55,13 +55,13 @@ This project is a web application for dynasty fantasy basketball enthusiasts. It
    ```
 3. Set up your MongoDB database
 4. Create a `.env` file in the server directory with your configuration
-5. Start the development servers (in 2 separate terminals):
+5. Start the development servers (in 2 separate terminals, start in root directory for both):
    ```
    cd server
    node src/server.js
    ```
    ```
-   cd ../client
+   cd client
    npm start
    ```
    
