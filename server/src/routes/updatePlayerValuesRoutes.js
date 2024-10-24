@@ -3,21 +3,12 @@ import { ObjectId } from 'mongodb';
 
 const router = express.Router();
 
-router.options('/', (req, res) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3001");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.sendStatus(200);
-});
+console.log('Setting up updatePlayerValuesRoutes');
+
+// Remove the OPTIONS route handler, as it's now handled globally
 
 router.post('/', async (req, res) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3001");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  res.header("Access-Control-Allow-Credentials", "true");
-
-  console.log('Received update player values request');
+  console.log('POST request received on updatePlayerValuesRoutes');
   const { choices, players } = req.body;
   const db = req.app.locals.db;
   const collection = db.collection('nba_players');
@@ -63,6 +54,7 @@ router.post('/', async (req, res) => {
       await collection.bulkWrite(updates);
     }
 
+    console.log('Player values updated successfully');
     res.json({ message: 'Player values updated successfully' });
   } catch (error) {
     console.error('Error updating player values:', error);

@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import morgan from 'morgan';
 import { MongoClient } from 'mongodb';
 
@@ -10,15 +11,25 @@ import updatePlayerValuesRoutes from './routes/updatePlayerValuesRoutes.js';
 const app = express();
 
 // CORS configuration
-// app.use(cors({
-//   origin: 'http://localhost:3001', // Explicitly allow your React app's origin
-//   credentials: true, // Allow credentials (cookies, authorization headers)
-//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed HTTP methods
-//   allowedHeaders: ['Content-Type', 'Authorization'] // Allowed headers
-// }));
+const corsOptions = {
+  origin: 'http://localhost:3001', // This should match your React app's URL
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],
+};
+
+app.use(cors(corsOptions));
+
+// Enable pre-flight requests for all routes
+app.options('*', cors(corsOptions));
 
 app.use(morgan('dev'));
 app.use(express.json());
+
+// Test route
+app.get('/api/test', (req, res) => {
+  res.json({ message: 'Test route working' });
+});
 
 // MongoDB connection
 const url = 'mongodb://localhost:27017';
@@ -41,13 +52,10 @@ app.use('/api/rankings', rankingsRoutes);
 app.use('/api/trade-calculator', tradeCalculatorRoutes);
 app.use('/api/update-player-values', updatePlayerValuesRoutes);
 
-// Add this general OPTIONS handler
-app.options('*', cors());
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Something broke!');
+// Catch-all route for debugging
+app.use('*', (req, res) => {
+  console.log(`No route found for ${req.method} ${req.url}`);
+  res.status(404).send('Not Found');
 });
 
 const PORT = process.env.PORT || 3000;

@@ -1,30 +1,46 @@
 import express from 'express';
 import http from 'http';
+import cors from 'cors';
 import playerRoutes from './routes/playerRoutes.js';
 import tradeRoutes from './routes/tradeRoutes.js';
+import updatePlayerValuesRoutes from './routes/updatePlayerValuesRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 app.set('port', PORT);
 
 // Middleware
+app.use(cors({
+  origin: 'http://localhost:3001',
+  credentials: true,
+}));
 app.use(express.json());
+
+// Debugging middleware
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  next();
+});
 
 // Routes
 app.use('/api/players', playerRoutes);
 app.use('/api/trades', tradeRoutes);
+app.use('/api/update-player-values', updatePlayerValuesRoutes);
 
-app.get('/api/players', (req, res) => {
-  res.json({ message: 'This will return player data in the future' });
+// Basic route for the root path
+app.get('/', (req, res) => {
+  res.send('Hello from the server!');
 });
 
-app.get('/api/trades', (req, res) => {
-  res.json({ message: 'This will return trade data in the future' });
+// Catch-all route for debugging
+app.use('*', (req, res) => {
+  console.log(`No route found for ${req.method} ${req.url}`);
+  res.status(404).send('Not Found');
 });
 
 const server = http.createServer(app);
 
-server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+server.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
 server.on('error', onError);
 server.on('listening', onListening);
 
@@ -59,11 +75,3 @@ function onListening() {
     : 'port ' + addr.port;
   console.log('Listening on ' + bind);
 }
-
-// You can now use exampleSharedFunction in your server code
-// exampleSharedFunction();
-
-// Basic route for the root path
-app.get('/', (req, res) => {
-  res.send('Hello from the server!');
-});
