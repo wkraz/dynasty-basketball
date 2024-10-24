@@ -1,0 +1,99 @@
+.keep-trade-cut {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.player-card {
+  background-color: #f9f9f9;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.player-card h3 {
+  color: var(--primary-color);
+  margin-top: 0;
+}
+
+.choices {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.choices button {
+  background-color: #f0f0f0;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.choices button.selected {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.choices button:hover {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+.submit-button-container {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.submit-button {
+  padding: 12px 24px;
+  font-size: 1.1em;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.submit-button:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.submit-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.keep-trade-cut-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  background-color: #f5f7fa;
+  min-height: 100vh;
+}
+
+.keep-trade-cut-container h2 {
+  font-size: 2.5em;
+  color: #333;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.player-cards {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin-bottom: 40px;
+}

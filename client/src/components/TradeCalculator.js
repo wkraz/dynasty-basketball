@@ -162,7 +162,9 @@ function TradeCalculator() {
       <div className="trade-result">
         <h3>Trade Difference</h3>
         <p>{Math.abs(team1Value - team2Value)}</p>
-        <p>{team1Value > team2Value ? "Team 1 wins the trade" : "Team 2 wins the trade"}</p>
+        {team1Players.length > 0 && team2Players.length > 0 && (
+          <p>{team1Value > team2Value ? "Team 1 wins the trade" : "Team 2 wins the trade"}</p>
+        )}
         {suggestedPlayers.length > 0 && (
           <div>
             <h4>Suggested players to balance the trade:</h4>

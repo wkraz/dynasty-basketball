@@ -6,8 +6,6 @@ const positions = ['PG', 'SG', 'SF', 'PF', 'C'];
 
 function PlayerRanking() {
   const [players, setPlayers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [selectedPositions, setSelectedPositions] = useState(new Set(positions));
 
   useEffect(() => {
@@ -15,35 +13,26 @@ function PlayerRanking() {
       try {
         const response = await axios.get('/api/players');
         setPlayers(response.data);
-        setLoading(false);
       } catch (error) {
         console.error('Error fetching players:', error);
-        setError('Failed to fetch players. Please try again later.');
-        setLoading(false);
       }
     };
-
     fetchPlayers();
   }, []);
 
   const handlePositionChange = (position) => {
-    setSelectedPositions(prevPositions => {
-      const newPositions = new Set(prevPositions);
-      if (newPositions.has(position)) {
-        newPositions.delete(position);
+    setSelectedPositions(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(position)) {
+        newSet.delete(position);
       } else {
-        newPositions.add(position);
+        newSet.add(position);
       }
-      return newPositions;
+      return newSet;
     });
   };
 
-  const filteredPlayers = players.filter(player => 
-    selectedPositions.has(player.position)
-  );
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  const filteredPlayers = players.filter(player => selectedPositions.has(player.position));
 
   return (
     <div className="player-ranking">
@@ -61,11 +50,14 @@ function PlayerRanking() {
         ))}
       </div>
       <div className="player-list">
-        {filteredPlayers.sort((a, b) => b.value - a.value).map(player => (
+        {filteredPlayers.sort((a, b) => b.value - a.value).map((player, index) => (
           <div key={player._id} className="player-item">
-            <div className="player-name">{player.name}</div>
-            <div className="player-details">
-              Value: {player.value} | Position: {player.position} | Team: {player.current_team}
+            <span className="player-rank">{index + 1}</span>
+            <div className="player-info">
+              <div className="player-name">{player.name}</div>
+              <div className="player-details">
+                Value: {player.value} | Position: {player.position} | Team: {player.current_team}
+              </div>
             </div>
           </div>
         ))}
