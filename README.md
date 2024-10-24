@@ -58,10 +58,10 @@ This project is a web application for dynasty fantasy basketball enthusiasts. It
 5. Start the development servers (in 2 separate terminals):
    ```
    cd server
-   npm run dev
+   node src/server.js
    ```
    ```
-   cd client
+   cd ../client
    npm start
    ```
    
