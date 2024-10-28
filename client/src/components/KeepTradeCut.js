@@ -13,6 +13,8 @@ const KeepTradeCut = () => {
   const [selectedPlayers, setSelectedPlayers] = useState([]);
   const [choices, setChoices] = useState({});
   const [recentlyUsedPlayers, setRecentlyUsedPlayers] = useState(new Set());
+  const [isLoading, setIsLoading] = useState(true);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
     fetchPlayers();
@@ -25,11 +27,14 @@ const KeepTradeCut = () => {
   }, [players]);
 
   const fetchPlayers = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get('/api/players');
       setPlayers(response.data);
     } catch (error) {
       console.error('Error fetching players:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -70,15 +75,19 @@ const KeepTradeCut = () => {
     setChoices(prevChoices => {
       const newChoices = { ...prevChoices };
       
-      // Remove the previous choice for this player
+      // Remove the previous choice if it exists
       Object.keys(newChoices).forEach(key => {
         if (newChoices[key] === choice) {
           delete newChoices[key];
         }
       });
       
-      // Set the new choice
-      newChoices[playerId] = choice;
+      // Toggle the choice if it's already selected
+      if (newChoices[playerId] === choice) {
+        delete newChoices[playerId];
+      } else {
+        newChoices[playerId] = choice;
+      }
       
       return newChoices;
     });
@@ -86,30 +95,41 @@ const KeepTradeCut = () => {
 
   const submitChoices = async () => {
     if (Object.keys(choices).length !== 3) {
-      alert('Please make a choice for all three players.');
+      toast.error('Please make a choice for all three players.');
       return;
     }
 
+    setIsLoading(true);
     try {
-      console.log('Submitting choices:', { choices, players: selectedPlayers });
-      const response = await api.post('/api/update-player-values', {
+      await api.post('/api/update-player-values', {
         choices,
         players: selectedPlayers
       });
-      console.log('Response:', response.data);
-      alert('Choices submitted successfully!');
-      selectRandomPlayers();
-      setChoices({});
+      
+      setShowSuccess(true);
+      setTimeout(() => {
+        setShowSuccess(false);
+        selectRandomPlayers();
+        setChoices({});
+      }, 1500);
     } catch (error) {
       console.error('Error submitting choices:', error);
-      if (error.response) {
-        console.error('Response data:', error.response.data);
-        console.error('Response status:', error.response.status);
-        console.error('Response headers:', error.response.headers);
-      }
-      alert('Error submitting choices. Please try again.');
+      toast.error('Error submitting choices. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="keep-trade-cut-container">
+        <div className="loading">
+          <h2>Loading players...</h2>
+          {/* Add a loading spinner component here */}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="keep-trade-cut-container">
@@ -121,12 +141,24 @@ const KeepTradeCut = () => {
             player={player}
             onChoiceChange={handleChoiceChange}
             selectedChoice={choices[player._id]}
+            disabled={isLoading}
           />
         ))}
       </div>
       <div className="submit-button-container">
-        <button className="submit-button" onClick={submitChoices}>Submit Choices</button>
+        <button 
+          className="submit-button"
+          onClick={submitChoices}
+          disabled={isLoading || Object.keys(choices).length !== 3}
+        >
+          {isLoading ? 'Submitting...' : 'Submit Choices'}
+        </button>
       </div>
+      {showSuccess && (
+        <div className="success-message">
+          Choices submitted successfully!
+        </div>
+      )}
     </div>
   );
 };

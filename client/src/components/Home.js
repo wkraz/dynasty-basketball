@@ -10,7 +10,7 @@ function Home() {
 
   return (
     <div className="home">
-      <h1>Fantasy Basketball Helper</h1>
+      <h1>Dynasty Hoops</h1>
       <div className="main-buttons">
         <Link to="/rankings" className="big-button">Rankings</Link>
         <Link to="/trade-calculator" className="big-button">Trade Calculator</Link>

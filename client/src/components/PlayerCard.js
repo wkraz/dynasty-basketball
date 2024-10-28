@@ -1,31 +1,46 @@
 import React from 'react';
 import './PlayerCard.css';
 
-const PlayerCard = ({ player, onChoiceChange, selectedChoice }) => {
+const PlayerCard = ({ player, onChoiceChange, selectedChoice, disabled }) => {
+  const getButtonClass = (choice) => {
+    return `choice-button ${choice} ${selectedChoice === choice ? 'selected' : ''}`;
+  };
+
   return (
     <div className="player-card">
       <div className="player-info">
-        <h3>{player.name}</h3>
-        <p><strong>Position:</strong> {player.position}</p>
-        <p><strong>Team:</strong> {player.current_team}</p>
-        <p><strong>Value:</strong> {player.value}</p>
+        <h3 className="player-name">{player.name}</h3>
+        <div className="player-details">
+          <span className="detail-item">
+            <i className="fas fa-basketball-ball"></i> {player.position}
+          </span>
+          <span className="detail-item">
+            <i className="fas fa-jersey"></i> {player.current_team}
+          </span>
+          <span className="detail-item">
+            <i className="fas fa-chart-line"></i> Value: {player.value}
+          </span>
+        </div>
       </div>
       <div className="choice-buttons">
         <button
-          className={selectedChoice === 'keep' ? 'selected' : ''}
+          className={getButtonClass('keep')}
           onClick={() => onChoiceChange(player._id, 'keep')}
+          disabled={disabled}
         >
           Keep
         </button>
         <button
-          className={selectedChoice === 'trade' ? 'selected' : ''}
+          className={getButtonClass('trade')}
           onClick={() => onChoiceChange(player._id, 'trade')}
+          disabled={disabled}
         >
           Trade
         </button>
         <button
-          className={selectedChoice === 'cut' ? 'selected' : ''}
+          className={getButtonClass('cut')}
           onClick={() => onChoiceChange(player._id, 'cut')}
+          disabled={disabled}
         >
           Cut
         </button>
