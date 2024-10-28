@@ -1,21 +1,44 @@
+// updatePlayerValuesRoutes.js
 import express from 'express';
-import { ObjectId } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 
 const router = express.Router();
 
-console.log('Setting up updatePlayerValuesRoutes');
+let client;
+let db;
 
-// Remove the OPTIONS route handler, as it's now handled globally
+// Initialize MongoDB connection
+async function connectToDatabase() {
+  const url = 'mongodb://localhost:27017';
+  const dbName = 'keeptradecut';
+  client = new MongoClient(url);
+  
+  try {
+    await client.connect();
+    console.log('Connected to MongoDB in updatePlayerValuesRoutes');
+    db = client.db(dbName);
+  } catch (error) {
+    console.error('Failed to connect to MongoDB:', error);
+    process.exit(1);
+  }
+}
+
+connectToDatabase();
 
 router.post('/', async (req, res) => {
   console.log('POST request received on updatePlayerValuesRoutes');
   const { choices, players } = req.body;
-  const db = req.app.locals.db;
+
+  if (!db) {
+    console.error('Database connection not established in updatePlayerValuesRoutes');
+    return res.status(500).json({ error: 'Database connection not established' });
+  }
+
   const collection = db.collection('nba_players');
+  const updates = [];
 
   try {
     const sortedPlayers = players.sort((a, b) => b.value - a.value);
-    const updates = [];
 
     for (let i = 0; i < sortedPlayers.length; i++) {
       let valueChange = 0;

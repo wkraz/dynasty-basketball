@@ -4,7 +4,7 @@ import PlayerCard from './PlayerCard'; // Add this import
 import './KeepTradeCut.css';
 
 const api = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: 'http://localhost:3000', //  server
   withCredentials: true,
 });
 

@@ -40,17 +40,22 @@ MongoClient.connect(url, { useUnifiedTopology: true })
     console.log('Connected to MongoDB');
     const db = client.db(dbName);
     app.locals.db = db;
+
+    // Routes
+    app.use('/api/players', playerRoutes);
+    app.use('/api/rankings', rankingsRoutes);
+    app.use('/api/trade-calculator', tradeCalculatorRoutes);
+    app.use('/api/update-player-values', updatePlayerValuesRoutes);
+
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   })
   .catch(error => {
     console.error('Failed to connect to MongoDB:', error);
     process.exit(1);
   });
 
-// Routes
-app.use('/api/players', playerRoutes);
-app.use('/api/rankings', rankingsRoutes);
-app.use('/api/trade-calculator', tradeCalculatorRoutes);
-app.use('/api/update-player-values', updatePlayerValuesRoutes);
+
 
 // Catch-all route for debugging
 app.use('*', (req, res) => {
@@ -58,7 +63,6 @@ app.use('*', (req, res) => {
   res.status(404).send('Not Found');
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
 
 export default app;
