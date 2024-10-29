@@ -6,7 +6,11 @@
   "scripts": {
     "start": "node src/server.js",
     "client": "cd ../client && npm start",
-    "dev": "concurrently \"npm start\" \"npm run client\""
+    "dev": "concurrently \"npm start\" \"npm run client\"",
+    "prod": "NODE_ENV=production node src/server.js"
+  },
+  "engines": {
+    "node": ">=14.0.0"
   },
   "keywords": [],
   "author": "",

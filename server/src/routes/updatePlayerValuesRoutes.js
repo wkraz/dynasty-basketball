@@ -15,7 +15,7 @@ async function connectToDatabase() {
   
   try {
     await client.connect();
-    console.log('Connected to MongoDB in updatePlayerValuesRoutes');
+    // console.log('Connected to MongoDB in updatePlayerValuesRoutes');
     db = client.db(dbName);
   } catch (error) {
     console.error('Failed to connect to MongoDB:', error);
@@ -26,7 +26,7 @@ async function connectToDatabase() {
 connectToDatabase();
 
 router.post('/', async (req, res) => {
-  console.log('POST request received on updatePlayerValuesRoutes');
+  // console.log('POST request received on updatePlayerValuesRoutes');
   const { choices, players } = req.body;
 
   if (!db) {
@@ -77,7 +77,7 @@ router.post('/', async (req, res) => {
       await collection.bulkWrite(updates);
     }
 
-    console.log('Player values updated successfully');
+    // console.log('Player values updated successfully');
     res.json({ message: 'Player values updated successfully' });
   } catch (error) {
     console.error('Error updating player values:', error);

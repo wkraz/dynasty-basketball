@@ -31,7 +31,7 @@ const fetchNBAPlayers = async () => {
     const filePath = path.join(__dirname, 'nba_players.json');
     await fs.writeFile(filePath, JSON.stringify(players, null, 2));
 
-    console.log(`Successfully fetched and saved data for ${players.length} players.`);
+    // og(`Successfully fetched and saved data for ${players.length} players.`);
   } catch (error) {
     console.error('Error fetching NBA players:', error);
   }

@@ -38,20 +38,20 @@ const addPlayers = async () => {
 
       if (existingPlayer) {
         await Player.updateOne({ name: player.name }, player);
-        console.log(`Updated player: ${player.name}`);
+        // console.log(`Updated player: ${player.name}`);
       } else {
         const newPlayer = new Player(player);
         await newPlayer.save();
-        console.log(`Added new player: ${player.name}`);
+        // console.log(`Added new player: ${player.name}`);
       }
     }
 
-    console.log('All players have been processed.');
+    // console.log('All players have been processed.');
   } catch (error) {
     console.error('Error processing players:', error);
   } finally {
     await mongoose.connection.close();
-    console.log('MongoDB connection closed');
+    // console.log('MongoDB connection closed');
   }
 };
 

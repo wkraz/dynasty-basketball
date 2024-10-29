@@ -14,14 +14,14 @@ async function importData() {
 
   try {
     await client.connect();
-    console.log('Connected successfully to server');
+    //console.log('Connected successfully to server');
 
     const db = client.db(dbName);
     const collection = db.collection('nba_players');
 
     // Insert the documents
     const result = await collection.insertMany(players);
-    console.log(`${result.insertedCount} documents were inserted`);
+    // console.log(`${result.insertedCount} documents were inserted`);
   } catch (err) {
     console.error(err);
   } finally {

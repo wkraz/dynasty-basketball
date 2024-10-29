@@ -9,7 +9,7 @@ function AddPlayer() {
   const handleSubmit = (e) => {
     e.preventDefault();
     // TODO: Implement API call to add player
-    console.log('Adding player:', { playerName, position, team, value });
+    // comment out for prod - console.log('Adding player:', { playerName, position, team, value });
     // Reset form
     setPlayerName('');
     setPosition('');
