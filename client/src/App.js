@@ -38,10 +38,10 @@ function App() {
             </ul>
           </nav>
           <div className="social-links">
-            <a href="https://twitter.com/fantasybballhelp" target="_blank" rel="noopener noreferrer">Twitter</a>
-            <a href="mailto:contact@fantasybballhelper.com">Email</a>
+            <a href="https://twitter.com/wkraz" target="_blank" rel="noopener noreferrer">Twitter: @wkraz</a>
+            <a href="mailto:wkrzastek05@gmail.com.com">Email: wkrzastek05@gmail.com</a>
           </div>
-          <p>&copy; 2024 Fantasy Basketball Helper. All rights reserved.</p>
+          <p>&copy; 2024 Choose Your Hooper. All rights reserved.</p>
         </footer>
       </div>
     </Router>

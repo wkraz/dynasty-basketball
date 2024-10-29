@@ -1,6 +1,6 @@
 // updatePlayerValuesRoutes.js
 import express from 'express';
-import { MongoClient, ObjectId } from 'mongodb';
+import { MongoClient, ObjectId, ServerApiVersion } from 'mongodb';
 
 const router = express.Router();
 
@@ -9,24 +9,37 @@ let db;
 
 // Initialize MongoDB connection
 async function connectToDatabase() {
-  const url = 'mongodb://localhost:27017';
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
+    throw new Error('MONGODB_URI environment variable not set');
+  }
   const dbName = 'keeptradecut';
-  client = new MongoClient(url);
+  client = new MongoClient(uri, {
+    serverApi: {
+      version: ServerApiVersion.v1,
+      strict: true,
+      deprecationErrors: true,
+    }
+  });
   
   try {
     await client.connect();
-    // console.log('Connected to MongoDB in updatePlayerValuesRoutes');
+    console.log('Connected to MongoDB in updatePlayerValuesRoutes');
     db = client.db(dbName);
   } catch (error) {
     console.error('Failed to connect to MongoDB:', error);
-    process.exit(1);
+    throw error;
   }
 }
 
-connectToDatabase();
+// Connect and handle errors
+connectToDatabase().catch(error => {
+  console.error('Database connection failed:', error);
+  process.exit(1);
+});
 
 router.post('/', async (req, res) => {
-  // console.log('POST request received on updatePlayerValuesRoutes');
+  console.log('POST request received on updatePlayerValuesRoutes');
   const { choices, players } = req.body;
 
   if (!db) {
@@ -77,7 +90,7 @@ router.post('/', async (req, res) => {
       await collection.bulkWrite(updates);
     }
 
-    // console.log('Player values updated successfully');
+    console.log('Player values updated successfully');
     res.json({ message: 'Player values updated successfully' });
   } catch (error) {
     console.error('Error updating player values:', error);

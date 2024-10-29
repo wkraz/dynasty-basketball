@@ -29,6 +29,10 @@ app.use(express.json());
 
 // MongoDB connection
 const uri = process.env.MONGODB_URI;
+if (!uri) {
+    console.error('MONGODB_URI not found in environment variables');
+    process.exit(1);
+}
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -36,6 +40,9 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   }
 });
+
+console.log('Attempting to connect to MongoDB with URI:', 
+  process.env.MONGODB_URI ? 'URI is set' : 'URI is NOT set');
 
 async function connectDB() {
   try {
