@@ -17,7 +17,7 @@ app.set('port', PORT);
 // CORS configuration
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://chooseyourhooper.com'] 
+    ? ['https://chooseyourhooper.com']  
     : ['http://localhost:3001'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
