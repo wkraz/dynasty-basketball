@@ -21,13 +21,18 @@ const PORT = process.env.PORT || 3000;
 // CORS configuration
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://chooseyourhooper.com', 'https://dynasty-basketball.onrender.com'] 
+    ? ['https://chooseyourhooper.com', 'https://www.chooseyourhooper.com'] 
     : ['http://localhost:3001'],
   credentials: true,
 };
 
 app.use(cors(corsOptions));
 app.use(express.json());
+
+// Add this before your other routes
+app.get('/', (req, res) => {
+  res.json({ message: 'Dynasty Basketball API is running' });
+});
 
 // Routes
 app.use('/api/players', playerRoutes);
