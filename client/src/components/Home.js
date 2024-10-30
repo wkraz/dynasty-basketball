@@ -8,7 +8,7 @@ function Home() {
       {/* Hero Section with Buttons */}
       <section className="hero">
         <div className="hero-content">
-          <h1>Dynasty Basketball Rankings</h1>
+          <h1>Choose Your Hooper</h1>
           <p>Community-driven rankings for dynasty basketball leagues</p>
           <div className="hero-buttons">
             <Link to="/rankings" className="hero-button">View Rankings</Link>
@@ -36,8 +36,8 @@ function Home() {
             <p>Make simple choices between three players - which would you keep, trade, or cut?</p>
           </div>
           <div className="step">
-            <h3>2. Have Fun</h3>
-            <p>That's it! Each choice you make helps refine our rankings. Also, please reach out to me via email or twitter if you notice any bugs or any player values that are super far off (like Lonzo Ball being rated 6700).</p>
+            <h3>2. Let me know if you notice anything off</h3>
+            <p>Please reach out to me via email or twitter if you notice any bugs or any player values that are super far off (like Lonzo Ball being rated 6700), or if a player simply is missing.</p>
           </div>
         </div>
       </section>
@@ -62,7 +62,7 @@ function Home() {
                 there is a severe lack of resources for dynasty basketball, and I wanted to create a platform to fix that. My goal is to provide the community 
             with rankings we can all trust because we all contribute to them.</p>
             <div className="my-team">
-              <h4>My Dynasty Team</h4>
+              <h4>My Dynasty Team (so you can judge my ball knowledge)</h4>
               <ul>
                 <li>Lamelo Ball - PG</li>
                 <li>Cade Cunningham - SG</li>
