@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import axios from 'axios';
 import PlayerCard from './PlayerCard'; // Add this import
 import './KeepTradeCut.css';
@@ -29,7 +30,7 @@ const KeepTradeCut = () => {
   const fetchPlayers = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get('/api/players');
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/players`);
       setPlayers(response.data);
     } catch (error) {
       console.error('Error fetching players:', error);
@@ -39,36 +40,50 @@ const KeepTradeCut = () => {
   };
 
   const selectRandomPlayers = () => {
-    const weightedRandom = () => {
-      const x = Math.random();
-      return Math.floor(10000 * Math.pow(x, 0.3)); // This gives a more balanced distribution
+    let attempts = 0;
+    const maxAttempts = 10;
+
+    const trySelectPlayers = () => {
+      if (attempts >= maxAttempts) {
+        console.log('Max attempts reached, using best available players');
+        const availablePlayers = players.filter(player => !recentlyUsedPlayers.has(player._id));
+        setSelectedPlayers(availablePlayers.slice(0, 3));
+        return;
+      }
+      attempts++;
+
+      const weightedRandom = () => {
+        const x = Math.random();
+        return Math.floor(10000 * Math.pow(x, 0.3));
+      };
+
+      const targetValue = weightedRandom();
+      const sortedPlayers = [...players].sort((a, b) => 
+        Math.abs(a.value - targetValue) - Math.abs(b.value - targetValue)
+      );
+
+      const availablePlayers = sortedPlayers.filter(player => !recentlyUsedPlayers.has(player._id));
+      const selectedThree = availablePlayers.slice(0, 3);
+
+      if (selectedThree.length === 3 && selectedThree.every((player, index, arr) => 
+        index === 0 || Math.abs(player.value - arr[index-1].value) <= 1000
+      )) {
+        setSelectedPlayers(selectedThree);
+        setRecentlyUsedPlayers(prev => {
+          const newSet = new Set(prev);
+          selectedThree.forEach(player => newSet.add(player._id));
+          return newSet;
+        });
+        
+        if (recentlyUsedPlayers.size > players.length / 2) {
+          setRecentlyUsedPlayers(new Set());
+        }
+      } else {
+        trySelectPlayers();
+      }
     };
 
-    const targetValue = weightedRandom();
-    const sortedPlayers = [...players].sort((a, b) => 
-      Math.abs(a.value - targetValue) - Math.abs(b.value - targetValue)
-    );
-
-    const availablePlayers = sortedPlayers.filter(player => !recentlyUsedPlayers.has(player._id));
-    const selectedThree = availablePlayers.slice(0, 3);
-
-    if (selectedThree.length === 3 && selectedThree.every((player, index, arr) => 
-      index === 0 || Math.abs(player.value - arr[index-1].value) <= 1000
-    )) {
-      setSelectedPlayers(selectedThree);
-      setRecentlyUsedPlayers(prev => {
-        const newSet = new Set(prev);
-        selectedThree.forEach(player => newSet.add(player._id));
-        return newSet;
-      });
-      
-      // Clear recently used players after a certain number of selections
-      if (recentlyUsedPlayers.size > players.length / 2) {
-        setRecentlyUsedPlayers(new Set());
-      }
-    } else {
-      selectRandomPlayers(); // Recursively try again if condition not met
-    }
+    trySelectPlayers();
   };
 
   const handleChoiceChange = (playerId, choice) => {
