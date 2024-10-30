@@ -18,7 +18,7 @@ console.log('PORT:', process.env.PORT);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// CORS configuration
+// CORS configuration - moved before app creation
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
     ? ['https://chooseyourhooper.com', 'https://www.chooseyourhooper.com'] 
@@ -29,8 +29,52 @@ const corsOptions = {
   optionsSuccessStatus: 200
 };
 
+// Add CORS headers manually for preflight
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', corsOptions.origin);
+  res.header('Access-Control-Allow-Methods', corsOptions.methods.join(','));
+  res.header('Access-Control-Allow-Headers', corsOptions.allowedHeaders.join(','));
+  res.header('Access-Control-Allow-Credentials', 'true');
+  
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  next();
+});
+
 app.use(cors(corsOptions));
 app.use(express.json());
+
+// MongoDB connection with retry logic
+const uri = process.env.MONGODB_URI;
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  }
+});
+
+let db;
+
+// Connect to MongoDB
+async function connectDB() {
+  try {
+    await client.connect();
+    console.log('Connected to MongoDB');
+    db = client.db('keeptradecut');
+    
+    // Test the connection
+    const collection = db.collection('nba_players');
+    const count = await collection.countDocuments();
+    console.log(`Database connected with ${count} players`);
+  } catch (error) {
+    console.error('MongoDB connection error:', error);
+    // Retry connection after 5 seconds
+    setTimeout(connectDB, 5000);
+  }
+}
+connectDB();
 
 // Add this before your other routes
 app.get('/', (req, res) => {
@@ -41,6 +85,15 @@ app.get('/', (req, res) => {
 app.use('/api/players', playerRoutes);
 app.use('/api/trades', tradeRoutes);
 app.use('/api/update-player-values', updatePlayerValuesRoutes);
+
+// Add error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Server error:', err);
+  res.status(500).json({ 
+    error: 'Internal server error', 
+    message: process.env.NODE_ENV === 'development' ? err.message : undefined 
+  });
+});
 
 // Create HTTP server
 const server = http.createServer(app);
