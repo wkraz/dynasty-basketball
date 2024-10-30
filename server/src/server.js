@@ -63,20 +63,30 @@ async function connectDB() {
     console.log('Connected to MongoDB');
     db = client.db('keeptradecut');
     
-    // Test the connection
-    const collection = db.collection('nba_players');
-    const count = await collection.countDocuments();
-    console.log(`Database connected with ${count} players`);
+    // Test both collections
+    const playersCollection = db.collection('nba_players');
+    const statsCollection = db.collection('ktc_stats');
+    
+    const playerCount = await playersCollection.countDocuments();
+    const statsCount = await statsCollection.countDocuments();
+    
+    console.log(`Database connected with ${playerCount} players and ${statsCount} stats documents`);
+    
+    // Set db in app context
+    app.set('db', db);
+    
+    // Mount all routes after db is connected
+    app.use('/api/players', playerRoutes);
+    app.use('/api/trades', tradeRoutes);
+    app.use('/api/update-player-values', updatePlayerValuesRoutes);
+    app.use('/api/stats', statsRoutes);
+    
   } catch (error) {
     console.error('MongoDB connection error:', error);
-    // Retry connection after 5 seconds
     setTimeout(connectDB, 5000);
   }
 }
 connectDB();
-
-// After successful MongoDB connection
-app.set('db', db);
 
 // Add this before your other routes
 app.get('/', (req, res) => {

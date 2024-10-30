@@ -102,29 +102,34 @@ function KeepTradeCut() {
 
     setIsLoading(true);
     try {
-      // Submit choices
-      await fetch(`${process.env.REACT_APP_API_URL}/api/update-player-values`, {
+      // First submit the choices
+      const choicesResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/update-player-values`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ choices, players: selectedPlayers })
       });
 
-      // Make sure this is a POST request with proper headers
+      if (!choicesResponse.ok) {
+        throw new Error(`Failed to submit choices: ${choicesResponse.status}`);
+      }
+
+      // Then increment the counter
+      console.log('Incrementing submissions counter...');
       const incrementResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/stats/increment-submissions`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
+        headers: { 'Content-Type': 'application/json' }
       });
 
       if (!incrementResponse.ok) {
-        throw new Error(`HTTP error! status: ${incrementResponse.status}`);
+        console.error('Failed to increment counter:', await incrementResponse.text());
+        throw new Error(`Failed to increment counter: ${incrementResponse.status}`);
       }
-      
-      // Fetch updated count
-      const statsResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/stats`);
-      const statsData = await statsResponse.json();
-      setSubmissionCount(statsData.submissions || 0);
+
+      const incrementData = await incrementResponse.json();
+      console.log('Increment response:', incrementData);
+
+      // Update the counter display
+      setSubmissionCount(incrementData.submissions);
       
       setShowSuccess(true);
       setTimeout(() => {
@@ -134,6 +139,7 @@ function KeepTradeCut() {
       }, 1500);
     } catch (error) {
       console.error('Error during submission:', error);
+      setShowSuccess(false);
     } finally {
       setIsLoading(false);
     }
