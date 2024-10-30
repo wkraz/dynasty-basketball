@@ -10,6 +10,12 @@ import updatePlayerValuesRoutes from './routes/updatePlayerValuesRoutes.js';
 // Load environment variables
 dotenv.config();
 
+// Add this right at the start of your server.js
+console.log('Environment Check:');
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('MONGODB_URI exists:', !!process.env.MONGODB_URI);
+console.log('PORT:', process.env.PORT);
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 app.set('port', PORT);
@@ -113,3 +119,4 @@ function onListening() {
 
 // Start the server
 connectDB().catch(console.dir);
+

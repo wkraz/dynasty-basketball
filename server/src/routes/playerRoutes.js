@@ -9,25 +9,28 @@ let db;
 
 // Initialize MongoDB connection
 async function connectToDatabase() {
-  const uri = process.env.MONGODB_URI;
-  if (!uri) {
-    throw new Error('MONGODB_URI environment variable not set');
-  }
-  const dbName = 'keeptradecut';
-  client = new MongoClient(uri, {
-    serverApi: {
-      version: ServerApiVersion.v1,
-      strict: true,
-      deprecationErrors: true,
-    }
-  });
-  
   try {
+    const uri = process.env.MONGODB_URI;
+    console.log('Attempting to connect with URI:', uri ? 'URI exists' : 'URI is missing');
+    
+    if (!uri) {
+      throw new Error('MONGODB_URI environment variable not set');
+    }
+
+    client = new MongoClient(uri, {
+      serverApi: {
+        version: ServerApiVersion.v1,
+        strict: true,
+        deprecationErrors: true,
+      }
+    });
+    
     await client.connect();
-    console.log('Connected to MongoDB in playerRoutes');
-    db = client.db(dbName);
+    console.log('Successfully connected to MongoDB');
+    db = client.db('keeptradecut');
+    return db;
   } catch (error) {
-    console.error('Failed to connect to MongoDB:', error);
+    console.error('Detailed connection error:', error);
     throw error;
   }
 }
