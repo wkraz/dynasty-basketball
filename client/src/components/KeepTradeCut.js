@@ -17,6 +17,8 @@ const KeepTradeCut = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [showSuccess, setShowSuccess] = useState(false);
 
+  const POSITIONS = ['C', 'F', 'G', 'GF', 'PF', 'PG', 'SF', 'SG'];
+
   useEffect(() => {
     fetchPlayers();
   }, []);
@@ -30,8 +32,9 @@ const KeepTradeCut = () => {
   const fetchPlayers = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/players`);
-      setPlayers(response.data);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/players`);
+      const data = await response.json();
+      setPlayers(data);
     } catch (error) {
       console.error('Error fetching players:', error);
     } finally {
@@ -149,17 +152,19 @@ const KeepTradeCut = () => {
   return (
     <div className="keep-trade-cut-container">
       <h2>Keep, Trade, Cut</h2>
-      <div className="player-cards">
-        {selectedPlayers.map((player) => (
-          <PlayerCard
-            key={player._id}
-            player={player}
-            onChoiceChange={handleChoiceChange}
-            selectedChoice={choices[player._id]}
-            disabled={isLoading}
-          />
-        ))}
-      </div>
+      {isLoading ? (
+        <div className="loading">Loading players...</div>
+      ) : (
+        <div className="player-cards">
+          {selectedPlayers.map((player) => (
+            <div key={player._id} className="player-card">
+              <h3>{player.name}</h3>
+              <p className="position">{player.position}</p>
+              {/* ... rest of your player card JSX ... */}
+            </div>
+          ))}
+        </div>
+      )}
       <div className="submit-button-container">
         <button 
           className="submit-button"

@@ -51,7 +51,8 @@ router.get('/', async (req, res) => {
   try {
     const collection = db.collection('nba_players');
     const players = await collection.find({}).toArray();
-    console.log(`Found ${players.length} players`); // Debug log
+    console.log(`Server: Found ${players.length} players`); // Debug log
+    console.log('Server: First 3 players:', players.slice(0, 3)); // Sample data
     res.json(players);
   } catch (error) {
     console.error('Error fetching players:', error);

@@ -3,8 +3,11 @@ import axios from 'axios';
 import Autosuggest from 'react-autosuggest';
 import './TradeCalculator.css';
 
+const POSITIONS = ['C', 'F', 'G', 'GF', 'PF', 'PG', 'SF', 'SG'];
+
 function TradeCalculator() {
-  const [players, setPlayers] = useState([]);
+  const [allPlayers, setAllPlayers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [team1Players, setTeam1Players] = useState([]);
   const [team2Players, setTeam2Players] = useState([]);
   const [team1Value, setTeam1Value] = useState(0);
@@ -13,18 +16,41 @@ function TradeCalculator() {
   const [team1Input, setTeam1Input] = useState('');
   const [team2Input, setTeam2Input] = useState('');
   const [suggestedPlayers, setSuggestedPlayers] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Initialize filters with all positions
+  const [positionFilters, setPositionFilters] = useState({
+    ALL: true,
+    ...POSITIONS.reduce((acc, pos) => ({ ...acc, [pos]: true }), {})
+  });
 
   useEffect(() => {
-    const fetchPlayers = async () => {
-      try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/players`);
-        setPlayers(response.data);
-      } catch (error) {
-        console.error('Error fetching players:', error);
-      }
-    };
     fetchPlayers();
   }, []);
+
+  const fetchPlayers = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/players`);
+      const data = await response.json();
+      setAllPlayers(data);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching players:', error);
+      setLoading(false);
+    }
+  };
+
+  const filterPlayersByPosition = (players) => {
+    if (positionFilters.ALL) return players;
+    return players.filter(player => positionFilters[player.position]);
+  };
+
+  const filteredPlayers = filterPlayersByPosition(allPlayers)
+    .filter(player => 
+      player.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      !team1Players.includes(player) &&
+      !team2Players.includes(player)
+    );
 
   useEffect(() => {
     const { value: value1, adjustedValue: adjustedValue1 } = calculateTeamValue(team1Players, team2Players);
@@ -35,7 +61,7 @@ function TradeCalculator() {
     // Suggest players for balancing the trade
     const difference = Math.abs(adjustedValue1 - adjustedValue2);
     if (difference > 0) {
-      const suggestedPlayers = players
+      const suggestedPlayers = allPlayers
         .filter(player => !team1Players.includes(player) && !team2Players.includes(player))
         .sort((a, b) => Math.abs(a.value - difference) - Math.abs(b.value - difference))
         .slice(0, 5);
@@ -43,7 +69,7 @@ function TradeCalculator() {
     } else {
       setSuggestedPlayers([]);
     }
-  }, [team1Players, team2Players, players]);
+  }, [team1Players, team2Players, allPlayers]);
 
   const calculateTeamValue = (teamPlayers, otherTeamPlayers) => {
     const baseValue = teamPlayers.reduce((sum, player) => sum + player.value, 0);
@@ -65,7 +91,7 @@ function TradeCalculator() {
 
   const getSuggestions = (inputValue) => {
     const inputValueLower = inputValue.trim().toLowerCase();
-    return players.filter(player =>
+    return filteredPlayers.filter(player =>
       player.name.toLowerCase().includes(inputValueLower) &&
       !team1Players.includes(player) &&
       !team2Players.includes(player)

@@ -2,20 +2,27 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './PlayerRanking.css';
 
-const positions = ['PG', 'SG', 'SF', 'PF', 'C'];
+const POSITIONS = ['C', 'F', 'G', 'GF', 'PF', 'PG', 'SF', 'SG'];
+
+const POSITION_LABELS = {
+  'C': 'Center',
+  'F': 'Forward',
+  'G': 'Guard',
+  'GF': 'Guard/Forward',
+  'PF': 'Power Forward',
+  'PG': 'Point Guard',
+  'SF': 'Small Forward',
+  'SG': 'Shooting Guard'
+};
 
 function PlayerRanking() {
   const [players, setPlayers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedPositions, setSelectedPositions] = useState({
-    PG: true,
-    SG: true,
-    SF: true,
-    PF: true,
-    C: true
-  });
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedPositions, setSelectedPositions] = useState(
+    POSITIONS.reduce((acc, pos) => ({ ...acc, [pos]: true }), {})
+  );
 
   console.log('Current API URL:', {
     REACT_APP_API_URL: process.env.REACT_APP_API_URL,
@@ -23,54 +30,35 @@ function PlayerRanking() {
   });
 
   useEffect(() => {
-    const fetchPlayers = async () => {
-      try {
-        setLoading(true);
-        const apiUrl = 'https://dynasty-basketball.onrender.com';
-        console.log('Using API URL:', apiUrl);
-        
-        const response = await fetch(`${apiUrl}/api/players`, {
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          }
-        });
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        setPlayers(Array.isArray(data) ? data : []);
-        setLoading(false);
-      } catch (error) {
-        console.error('Fetch error details:', {
-          message: error.message,
-          stack: error.stack
-        });
-        setError(error.message);
-        setLoading(false);
-      }
-    };
-
     fetchPlayers();
   }, []);
 
-  if (loading) return <div>Loading players...</div>;
-  if (error) return <div>Error: {error}</div>;
-
-  const handlePositionChange = (position) => {
-    setSelectedPositions(prev => ({
-      ...prev,
-      [position]: !prev[position]
-    }));
+  const fetchPlayers = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/players`);
+      const data = await response.json();
+      console.log('Total players fetched:', data.length);
+      console.log('Sample player:', data.find(p => p.name.includes('LaMelo')));
+      setPlayers(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error('Error fetching players:', error);
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const filteredPlayers = players
-    .filter(player => 
-      selectedPositions[player.position] && 
-      player.name.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-    .sort((a, b) => b.value - a.value);
+  const filteredPlayers = players.filter(player => {
+    const positionMatch = selectedPositions[player.position];
+    const searchMatch = player.name.toLowerCase().includes(searchQuery.toLowerCase());
+    return positionMatch && searchMatch;
+  }).sort((a, b) => b.value - a.value);
+
+  console.log('Filtered players count:', filteredPlayers.length);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="player-ranking">
@@ -85,12 +73,15 @@ function PlayerRanking() {
         />
       </div>
       <div className="position-filters">
-        {positions.map(position => (
-          <label key={position}>
+        {POSITIONS.map(position => (
+          <label key={position} className="position-filter">
             <input
               type="checkbox"
               checked={selectedPositions[position]}
-              onChange={() => handlePositionChange(position)}
+              onChange={() => setSelectedPositions(prev => ({
+                ...prev,
+                [position]: !prev[position]
+              }))}
             />
             {position}
           </label>
@@ -103,7 +94,7 @@ function PlayerRanking() {
             <div className="player-info">
               <div className="player-name">{player.name}</div>
               <div className="player-details">
-                Value: {player.value} | Position: {player.position} | Team: {player.current_team}
+                {player.position} | Value: {player.value}
               </div>
             </div>
           </div>

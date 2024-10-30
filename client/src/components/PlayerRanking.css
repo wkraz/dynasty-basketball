@@ -30,27 +30,34 @@
 
 .position-filters {
   display: flex;
-  gap: 15px;
-  justify-content: center;
-  margin: 30px 0;
   flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin: 20px 0;
 }
 
-.position-filters label {
+.position-filter {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-  background: white;
+  gap: 6px;
+  padding: 8px 16px;
   border-radius: 20px;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+  user-select: none;
 }
 
-.position-filters label:hover {
+.position-filter:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  background: #f8f9fa;
+}
+
+.position-filter input[type="checkbox"] {
+  margin: 0;
+  cursor: pointer;
 }
 
 .player-list {
