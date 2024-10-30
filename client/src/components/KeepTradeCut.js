@@ -120,7 +120,10 @@ function KeepTradeCut() {
     return (
       <div className="player-card">
         <h3>{player.name}</h3>
-        <p className="position">{player.position}</p>
+        <div className="player-details">
+          <span className="position">{player.position}</span>
+          <span className="team">{player.current_team}</span>
+        </div>
         <div className="choice-buttons">
           <button
             className={`choice-button keep-button ${currentChoice === 'keep' ? 'selected' : ''}`}
