@@ -109,13 +109,22 @@ function KeepTradeCut() {
         body: JSON.stringify({ choices, players: selectedPlayers })
       });
 
-      // Increment global counter
-      await fetch(`${process.env.REACT_APP_API_URL}/api/stats/increment-submissions`, {
-        method: 'POST'
+      // Make sure this is a POST request with proper headers
+      const incrementResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/stats/increment-submissions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
+
+      if (!incrementResponse.ok) {
+        throw new Error(`HTTP error! status: ${incrementResponse.status}`);
+      }
       
-      // Fetch updated stats
-      await fetchStats();
+      // Fetch updated count
+      const statsResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/stats`);
+      const statsData = await statsResponse.json();
+      setSubmissionCount(statsData.submissions || 0);
       
       setShowSuccess(true);
       setTimeout(() => {
@@ -124,7 +133,7 @@ function KeepTradeCut() {
         setChoices({});
       }, 1500);
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error during submission:', error);
     } finally {
       setIsLoading(false);
     }

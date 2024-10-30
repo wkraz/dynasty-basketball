@@ -1,9 +1,16 @@
 import express from 'express';
 const router = express.Router();
 
-// Increment submissions counter
+// Debug middleware
+router.use((req, res, next) => {
+  console.log(`Stats Route - ${req.method} ${req.path}`);
+  next();
+});
+
+// POST route for incrementing
 router.post('/increment-submissions', async (req, res) => {
   const db = req.app.get('db');
+  console.log('Received increment request');
   
   try {
     const result = await db.collection('ktc_stats').updateOne(
@@ -11,14 +18,21 @@ router.post('/increment-submissions', async (req, res) => {
       { $inc: { submissions: 1 } },
       { upsert: true }
     );
-    res.json({ success: true });
+    
+    const updated = await db.collection('ktc_stats').findOne({ id: 'global' });
+    console.log('Updated stats:', updated);
+    
+    res.json({
+      success: true,
+      submissions: updated.submissions
+    });
   } catch (error) {
     console.error('Error incrementing submissions:', error);
     res.status(500).json({ error: error.message });
   }
 });
 
-// Get current stats (optional, if you want to display the count somewhere)
+// GET route for fetching stats
 router.get('/', async (req, res) => {
   const db = req.app.get('db');
   
