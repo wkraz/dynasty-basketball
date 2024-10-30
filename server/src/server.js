@@ -21,7 +21,7 @@ const PORT = process.env.PORT || 3000;
 // CORS configuration
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://chooseyourhooper.com'] 
+    ? ['https://chooseyourhooper.com', 'https://dynasty-basketball.onrender.com'] 
     : ['http://localhost:3001'],
   credentials: true,
 };
