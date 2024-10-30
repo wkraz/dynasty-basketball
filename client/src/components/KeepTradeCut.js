@@ -10,6 +10,40 @@ function KeepTradeCut() {
   const [showSuccess, setShowSuccess] = useState(false);
   const POSITIONS = ['C', 'F', 'G', 'GF', 'PF', 'PG', 'SF', 'SG'];
 
+  const selectRandomPlayers = () => {
+    const availablePlayers = players.filter(player => !recentlyUsedPlayers.has(player._id));
+    
+    if (availablePlayers.length < 3) {
+      // Reset recently used if we don't have enough players
+      setRecentlyUsedPlayers(new Set());
+      return selectRandomPlayers();
+    }
+
+    // Select 3 random players with similar values
+    const randomIndex = Math.floor(Math.random() * (availablePlayers.length - 2));
+    const baseValue = availablePlayers[randomIndex].value;
+    
+    const similarValuePlayers = availablePlayers.filter(player => 
+      Math.abs(player.value - baseValue) <= 1000
+    );
+
+    if (similarValuePlayers.length >= 3) {
+      // Shuffle and take first 3
+      const shuffled = [...similarValuePlayers].sort(() => 0.5 - Math.random());
+      const selected = shuffled.slice(0, 3);
+      
+      setSelectedPlayers(selected);
+      setRecentlyUsedPlayers(prev => {
+        const newSet = new Set(prev);
+        selected.forEach(player => newSet.add(player._id));
+        return newSet;
+      });
+    } else {
+      // Try again if we couldn't find 3 similar value players
+      selectRandomPlayers();
+    }
+  };
+
   useEffect(() => {
     fetchPlayers();
   }, []);
