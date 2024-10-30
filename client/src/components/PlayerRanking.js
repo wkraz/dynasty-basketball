@@ -15,6 +15,7 @@ function PlayerRanking() {
     PF: true,
     C: true
   });
+  const [searchQuery, setSearchQuery] = useState('');
 
   console.log('Current API URL:', {
     REACT_APP_API_URL: process.env.REACT_APP_API_URL,
@@ -64,13 +65,25 @@ function PlayerRanking() {
     }));
   };
 
-  const filteredPlayers = players.filter(player => 
-    selectedPositions[player.position]
-  ).sort((a, b) => b.value - a.value);
+  const filteredPlayers = players
+    .filter(player => 
+      selectedPositions[player.position] && 
+      player.name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .sort((a, b) => b.value - a.value);
 
   return (
     <div className="player-ranking">
       <h2>Player Rankings</h2>
+      <div className="search-bar">
+        <input
+          type="text"
+          placeholder="Search players..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="search-input"
+        />
+      </div>
       <div className="position-filters">
         {positions.map(position => (
           <label key={position}>
