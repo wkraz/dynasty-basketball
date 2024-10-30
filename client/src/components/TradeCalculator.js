@@ -80,13 +80,19 @@ function TradeCalculator() {
     };
   };
 
-  const calculateValueAdjustment = (teamSize, otherTeamSize) => {
-    if (teamSize === 0 || otherTeamSize === 0) return 0;
-    const difference = otherTeamSize - teamSize;
-    if (difference <= 0) return 0;
+  const calculateValueAdjustment = (total, opposingTotal) => {
+    if (total === 0) return 0;
     
-    const adjustmentPerPlayer = 3000 * (9000 / 6000);
-    return difference * adjustmentPerPlayer;
+    const difference = Math.abs(total - opposingTotal);
+    const higherValue = Math.max(total, opposingTotal);
+    
+    // Base the adjustment on the difference with the opposing side
+    if (total < opposingTotal) {
+      // If this side is losing, add value based on the difference
+      return Math.min(difference * 0.1, 800); // Cap at 800
+    }
+    
+    return 0; // No adjustment if winning
   };
 
   const getSuggestions = (inputValue) => {

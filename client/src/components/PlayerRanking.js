@@ -94,7 +94,9 @@ function PlayerRanking() {
             <div className="player-info">
               <div className="player-name">{player.name}</div>
               <div className="player-details">
-                {player.position} | Value: {player.value}
+                <span className="player-position">{player.position}</span>
+                <span className="player-team">{player.current_team}</span>
+                <span className="player-value">Value: {player.value}</span>
               </div>
             </div>
           </div>

@@ -6,6 +6,7 @@ import { MongoClient, ServerApiVersion } from 'mongodb';
 import playerRoutes from './routes/playerRoutes.js';
 import tradeRoutes from './routes/tradeRoutes.js';
 import updatePlayerValuesRoutes from './routes/updatePlayerValuesRoutes.js';
+import statsRoutes from './routes/statsRoutes.js';
 
 dotenv.config();
 
@@ -74,6 +75,9 @@ async function connectDB() {
 }
 connectDB();
 
+// After successful MongoDB connection
+app.set('db', db);
+
 // Add this before your other routes
 app.get('/', (req, res) => {
   res.json({ message: 'Dynasty Basketball API is running' });
@@ -83,6 +87,7 @@ app.get('/', (req, res) => {
 app.use('/api/players', playerRoutes);
 app.use('/api/trades', tradeRoutes);
 app.use('/api/update-player-values', updatePlayerValuesRoutes);
+app.use('/api/stats', statsRoutes);
 
 // Add error handling middleware
 app.use((err, req, res, next) => {

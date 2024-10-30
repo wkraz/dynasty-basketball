@@ -8,6 +8,7 @@ function KeepTradeCut() {
   const [recentlyUsedPlayers, setRecentlyUsedPlayers] = useState(new Set());
   const [isLoading, setIsLoading] = useState(true);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [submissionCount, setSubmissionCount] = useState(0);
   const POSITIONS = ['C', 'F', 'G', 'GF', 'PF', 'PG', 'SF', 'SG'];
 
   const selectRandomPlayers = () => {
@@ -46,6 +47,7 @@ function KeepTradeCut() {
 
   useEffect(() => {
     fetchPlayers();
+    fetchStats();
   }, []);
 
   useEffect(() => {
@@ -64,6 +66,16 @@ function KeepTradeCut() {
       console.error('Error fetching players:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const fetchStats = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/stats`);
+      const data = await response.json();
+      setSubmissionCount(data.submissions || 0);
+    } catch (error) {
+      console.error('Error fetching stats:', error);
     }
   };
 
@@ -90,16 +102,20 @@ function KeepTradeCut() {
 
     setIsLoading(true);
     try {
+      // Submit choices
       await fetch(`${process.env.REACT_APP_API_URL}/api/update-player-values`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          choices,
-          players: selectedPlayers
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ choices, players: selectedPlayers })
       });
+
+      // Increment global counter
+      await fetch(`${process.env.REACT_APP_API_URL}/api/stats/increment-submissions`, {
+        method: 'POST'
+      });
+      
+      // Fetch updated stats
+      await fetchStats();
       
       setShowSuccess(true);
       setTimeout(() => {
@@ -108,7 +124,7 @@ function KeepTradeCut() {
         setChoices({});
       }, 1500);
     } catch (error) {
-      console.error('Error submitting choices:', error);
+      console.error('Error:', error);
     } finally {
       setIsLoading(false);
     }
@@ -154,6 +170,9 @@ function KeepTradeCut() {
   return (
     <div className="keep-trade-cut-container">
       <h2>Keep, Trade, Cut</h2>
+      <div className="submission-counter">
+        Total Submissions: {submissionCount}
+      </div>
       {isLoading ? (
         <div className="loading">Loading players...</div>
       ) : (
