@@ -20,9 +20,7 @@ const PORT = process.env.PORT || 3000;
 
 // CORS configuration - moved before app creation
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://chooseyourhooper.com', 'https://www.chooseyourhooper.com'] 
-    : ['http://localhost:3001'],
+  origin: 'https://chooseyourhooper.com',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
