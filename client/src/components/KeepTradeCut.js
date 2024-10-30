@@ -95,42 +95,35 @@ function KeepTradeCut() {
   };
 
   const submitChoices = async () => {
-    if (Object.keys(choices).length !== 3) {
-      console.error('Please make a choice for all three players.');
-      return;
-    }
+    if (Object.keys(choices).length !== 3) return;
 
     setIsLoading(true);
     try {
-      // First submit the choices
+      // First submit choices
       const choicesResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/update-player-values`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ choices, players: selectedPlayers })
       });
 
-      if (!choicesResponse.ok) {
-        throw new Error(`Failed to submit choices: ${choicesResponse.status}`);
-      }
+      if (!choicesResponse.ok) throw new Error('Failed to submit choices');
 
-      // Then increment the counter
-      console.log('Incrementing submissions counter...');
+      // Then increment counter
+      console.log('Incrementing submissions...');
       const incrementResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/stats/increment-submissions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       });
 
       if (!incrementResponse.ok) {
-        console.error('Failed to increment counter:', await incrementResponse.text());
-        throw new Error(`Failed to increment counter: ${incrementResponse.status}`);
+        console.error('Increment response:', await incrementResponse.text());
+        throw new Error('Failed to increment counter');
       }
 
-      const incrementData = await incrementResponse.json();
-      console.log('Increment response:', incrementData);
+      const data = await incrementResponse.json();
+      console.log('Increment successful:', data);
+      setSubmissionCount(data.submissions);
 
-      // Update the counter display
-      setSubmissionCount(incrementData.submissions);
-      
       setShowSuccess(true);
       setTimeout(() => {
         setShowSuccess(false);
@@ -138,8 +131,7 @@ function KeepTradeCut() {
         setChoices({});
       }, 1500);
     } catch (error) {
-      console.error('Error during submission:', error);
-      setShowSuccess(false);
+      console.error('Error:', error);
     } finally {
       setIsLoading(false);
     }
