@@ -6,19 +6,35 @@ const positions = ['PG', 'SG', 'SF', 'PF', 'C'];
 
 function PlayerRanking() {
   const [players, setPlayers] = useState([]);
-  const [selectedPositions, setSelectedPositions] = useState(new Set(positions));
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedPositions, setSelectedPositions] = useState({
+    PG: true, SG: true, SF: true, PF: true, C: true
+  });
 
   useEffect(() => {
     const fetchPlayers = async () => {
       try {
-        const response = await axios.get('/api/players');
-        setPlayers(response.data);
+        setLoading(true);
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/players`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setPlayers(Array.isArray(data) ? data : []);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching players:', error);
+        setError(error.message);
+        setLoading(false);
       }
     };
+
     fetchPlayers();
   }, []);
+
+  if (loading) return <div>Loading players...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   const handlePositionChange = (position) => {
     setSelectedPositions(prev => {
@@ -32,7 +48,9 @@ function PlayerRanking() {
     });
   };
 
-  const filteredPlayers = players.filter(player => selectedPositions.has(player.position));
+  const filteredPlayers = players.filter(player => 
+    selectedPositions[player.position]
+  ).sort((a, b) => b.value - a.value);
 
   return (
     <div className="player-ranking">
@@ -50,7 +68,7 @@ function PlayerRanking() {
         ))}
       </div>
       <div className="player-list">
-        {filteredPlayers.sort((a, b) => b.value - a.value).map((player, index) => (
+        {filteredPlayers.map((player, index) => (
           <div key={player._id} className="player-item">
             <span className="player-rank">{index + 1}</span>
             <div className="player-info">

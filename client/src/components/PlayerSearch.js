@@ -1,27 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const PlayerSearch = ({ onSelect }) => {
   const [search, setSearch] = useState('');
   const [suggestions, setSuggestions] = useState([]);
+  const [players, setPlayers] = useState([]);
 
-  // This is a mock function. In a real app, you'd fetch this data from an API or database
+  useEffect(() => {
+    const fetchPlayers = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/players`);
+        const data = await response.json();
+        setPlayers(data);
+      } catch (error) {
+        console.error('Error fetching players:', error);
+      }
+    };
+    fetchPlayers();
+  }, []);
+
   const searchPlayers = (query) => {
-    // Mock NBA player data
-    const allPlayers = [
-      { name: 'LeBron James', value: 9000 },
-      { name: 'Stephen Curry', value: 8500 },
-      { name: 'Kevin Durant', value: 8700 },
-      { name: 'Giannis Antetokounmpo', value: 9200 },
-      { name: 'Luka Doncic', value: 9100 },
-      { name: 'Nikola Jokic', value: 9300 },
-      { name: 'Joel Embiid', value: 9000 },
-      { name: 'Kawhi Leonard', value: 8300 },
-      { name: 'Anthony Davis', value: 8200 },
-      { name: 'Damian Lillard', value: 8000 },
-      // Add more NBA players...
-    ];
-
-    return allPlayers.filter(player => 
+    return players.filter(player => 
       player.name.toLowerCase().includes(query.toLowerCase())
     );
   };
