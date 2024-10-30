@@ -9,7 +9,11 @@ function PlayerRanking() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedPositions, setSelectedPositions] = useState({
-    PG: true, SG: true, SF: true, PF: true, C: true
+    PG: true,
+    SG: true,
+    SF: true,
+    PF: true,
+    C: true
   });
 
   console.log('Current API URL:', {
@@ -54,15 +58,10 @@ function PlayerRanking() {
   if (error) return <div>Error: {error}</div>;
 
   const handlePositionChange = (position) => {
-    setSelectedPositions(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(position)) {
-        newSet.delete(position);
-      } else {
-        newSet.add(position);
-      }
-      return newSet;
-    });
+    setSelectedPositions(prev => ({
+      ...prev,
+      [position]: !prev[position]
+    }));
   };
 
   const filteredPlayers = players.filter(player => 
@@ -77,7 +76,7 @@ function PlayerRanking() {
           <label key={position}>
             <input
               type="checkbox"
-              checked={selectedPositions.has(position)}
+              checked={selectedPositions[position]}
               onChange={() => handlePositionChange(position)}
             />
             {position}
