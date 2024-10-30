@@ -10,7 +10,7 @@ import updatePlayerValuesRoutes from './routes/updatePlayerValuesRoutes.js';
 dotenv.config();
 
 // Environment logging
-console.log('Environment Check:');
+console.log('Environment variables:');
 console.log('NODE_ENV:', process.env.NODE_ENV);
 console.log('MONGODB_URI exists:', !!process.env.MONGODB_URI);
 console.log('PORT:', process.env.PORT);
@@ -23,7 +23,10 @@ const corsOptions = {
   origin: process.env.NODE_ENV === 'production' 
     ? ['https://chooseyourhooper.com', 'https://www.chooseyourhooper.com'] 
     : ['http://localhost:3001'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
+  optionsSuccessStatus: 200
 };
 
 app.use(cors(corsOptions));

@@ -16,15 +16,17 @@ function PlayerRanking() {
     const fetchPlayers = async () => {
       try {
         setLoading(true);
+        console.log('Fetching from:', `${process.env.REACT_APP_API_URL}/api/players`);
         const response = await fetch(`${process.env.REACT_APP_API_URL}/api/players`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
+        console.log('Received data:', data);
         setPlayers(Array.isArray(data) ? data : []);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching players:', error);
+        console.error('Detailed error:', error);
         setError(error.message);
         setLoading(false);
       }

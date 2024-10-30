@@ -44,12 +44,14 @@ connectToDatabase().catch(error => {
 // GET all players
 router.get('/', async (req, res) => {
   if (!db) {
+    console.error('Database not connected');
     return res.status(500).json({ error: 'Database not connected' });
   }
   
   try {
     const collection = db.collection('nba_players');
     const players = await collection.find({}).toArray();
+    console.log(`Found ${players.length} players`); // Debug log
     res.json(players);
   } catch (error) {
     console.error('Error fetching players:', error);
