@@ -12,15 +12,25 @@ function PlayerRanking() {
     PG: true, SG: true, SF: true, PF: true, C: true
   });
 
+  console.log('Current API URL:', {
+    REACT_APP_API_URL: process.env.REACT_APP_API_URL,
+    nodeEnv: process.env.NODE_ENV
+  });
+
   useEffect(() => {
     const fetchPlayers = async () => {
       try {
         setLoading(true);
-        console.log('Environment variable:', process.env.REACT_APP_API_URL);
-        const url = `${process.env.REACT_APP_API_URL}/api/players`;
-        console.log('Attempting to fetch from:', url);
+        const apiUrl = 'https://dynasty-basketball.onrender.com';
+        console.log('Using API URL:', apiUrl);
         
-        const response = await fetch(url);
+        const response = await fetch(`${apiUrl}/api/players`, {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        });
+        
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -28,7 +38,10 @@ function PlayerRanking() {
         setPlayers(Array.isArray(data) ? data : []);
         setLoading(false);
       } catch (error) {
-        console.error('Fetch error:', error);
+        console.error('Fetch error details:', {
+          message: error.message,
+          stack: error.stack
+        });
         setError(error.message);
         setLoading(false);
       }
