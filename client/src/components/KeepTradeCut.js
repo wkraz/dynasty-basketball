@@ -46,8 +46,21 @@ function KeepTradeCut() {
   };
 
   useEffect(() => {
-    fetchPlayers();
-    fetchStats();
+    const initializeData = async () => {
+      setIsLoading(true);
+      try {
+        await Promise.all([
+          fetchPlayers(),
+          fetchStats()
+        ]);
+      } catch (error) {
+        console.error('Error initializing data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    initializeData();
   }, []);
 
   useEffect(() => {
@@ -72,6 +85,7 @@ function KeepTradeCut() {
   const fetchStats = async () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/api/stats`);
+      if (!response.ok) throw new Error('Failed to fetch stats');
       const data = await response.json();
       setSubmissionCount(data.submissions || 0);
     } catch (error) {

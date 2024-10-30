@@ -1,18 +1,27 @@
 import express from 'express';
 const router = express.Router();
 
-// Debug middleware to log all requests
-router.use((req, res, next) => {
-  console.log(`Stats Route Hit: ${req.method} ${req.url}`);
-  next();
+// GET endpoint for current stats
+router.get('/', async (req, res) => {
+  try {
+    const db = req.app.get('db');
+    const stats = await db.collection('ktc_stats').findOne({ id: 'global' });
+    res.json(stats || { submissions: 0 });
+  } catch (error) {
+    console.error('Error fetching stats:', error);
+    res.status(500).json({ error: error.toString() });
+  }
 });
 
-// Handle POST request
+// Handle GET request to increment endpoint by redirecting
+router.get('/increment-submissions', (req, res) => {
+  res.redirect('/api/stats');
+});
+
+// POST endpoint for incrementing
 router.post('/increment-submissions', async (req, res) => {
   try {
     const db = req.app.get('db');
-    console.log('Attempting to increment submissions...');
-    
     const result = await db.collection('ktc_stats').updateOne(
       { id: 'global' },
       { $inc: { submissions: 1 } },
@@ -20,8 +29,6 @@ router.post('/increment-submissions', async (req, res) => {
     );
     
     const updated = await db.collection('ktc_stats').findOne({ id: 'global' });
-    console.log('Updated stats:', updated);
-    
     res.json({
       success: true,
       submissions: updated.submissions
@@ -30,15 +37,6 @@ router.post('/increment-submissions', async (req, res) => {
     console.error('Error in increment-submissions:', error);
     res.status(500).json({ error: error.toString() });
   }
-});
-
-// Handle GET request (return current count)
-router.get('/increment-submissions', (req, res) => {
-  // Inform client that POST is required
-  res.status(405).json({ 
-    error: 'Method Not Allowed',
-    message: 'Please use POST method for this endpoint'
-  });
 });
 
 export default router;
