@@ -38,7 +38,7 @@ function App() {
             </ul>
           </nav>
           <div className="social-links">
-            <a href="https://twitter.com/wkraz" target="_blank" rel="noopener noreferrer">Twitter: @wkraz</a>
+            <a href="https://twitter.com/willkraz" target="_blank" rel="noopener noreferrer">Twitter: @willkraz</a>
             <a href="mailto:wkrzastek05@gmail.com.com">Email: wkrzastek05@gmail.com</a>
           </div>
           <p>&copy; 2024 Choose Your Hooper. All rights reserved.</p>

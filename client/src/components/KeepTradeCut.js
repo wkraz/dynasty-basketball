@@ -96,12 +96,20 @@ function KeepTradeCut() {
   const handleChoiceChange = (playerId, choice) => {
     setChoices(prev => {
       const newChoices = { ...prev };
+      
+      // If clicking the same choice for the same player, unselect it
+      if (newChoices[playerId] === choice) {
+        delete newChoices[playerId];
+        return newChoices;
+      }
+      
       // If this choice is already selected for another player, remove it
       Object.keys(newChoices).forEach(key => {
-        if (newChoices[key] === choice && key !== playerId) {
+        if (newChoices[key] === choice) {
           delete newChoices[key];
         }
       });
+      
       // Set the new choice
       newChoices[playerId] = choice;
       return newChoices;
@@ -165,21 +173,18 @@ function KeepTradeCut() {
           <button
             className={`choice-button keep-button ${currentChoice === 'keep' ? 'selected' : ''}`}
             onClick={() => handleChoiceChange(player._id, 'keep')}
-            disabled={currentChoice !== 'keep' && Object.values(choices).includes('keep')}
           >
             Keep
           </button>
           <button
             className={`choice-button trade-button ${currentChoice === 'trade' ? 'selected' : ''}`}
             onClick={() => handleChoiceChange(player._id, 'trade')}
-            disabled={currentChoice !== 'trade' && Object.values(choices).includes('trade')}
           >
             Trade
           </button>
           <button
             className={`choice-button cut-button ${currentChoice === 'cut' ? 'selected' : ''}`}
             onClick={() => handleChoiceChange(player._id, 'cut')}
-            disabled={currentChoice !== 'cut' && Object.values(choices).includes('cut')}
           >
             Cut
           </button>
