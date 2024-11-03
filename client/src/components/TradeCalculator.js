@@ -200,6 +200,12 @@ function TradeCalculator() {
                 <button onClick={() => removePlayer(1, player)}>Remove</button>
               </li>
             ))}
+            {team1Players.length > 0 && team2Players.length > 0 && 
+             team1Value > team1Players.reduce((sum, p) => sum + p.value, 0) && (
+              <li className="value-adjustment">
+                Value Adjustment: +{team1Value - team1Players.reduce((sum, p) => sum + p.value, 0)}
+              </li>
+            )}
           </ul>
           <p>Total Value: {team1Value}</p>
         </div>
@@ -225,6 +231,12 @@ function TradeCalculator() {
                 <button onClick={() => removePlayer(2, player)}>Remove</button>
               </li>
             ))}
+            {team1Players.length > 0 && team2Players.length > 0 && 
+             team2Value > team2Players.reduce((sum, p) => sum + p.value, 0) && (
+              <li className="value-adjustment">
+                Value Adjustment: +{team2Value - team2Players.reduce((sum, p) => sum + p.value, 0)}
+              </li>
+            )}
           </ul>
           <p>Total Value: {team2Value}</p>
         </div>
