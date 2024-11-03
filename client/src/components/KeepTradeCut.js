@@ -15,24 +15,34 @@ function KeepTradeCut() {
     const availablePlayers = players.filter(player => !recentlyUsedPlayers.has(player._id));
     
     if (availablePlayers.length < 3) {
-      // Reset recently used if we don't have enough players
       setRecentlyUsedPlayers(new Set());
       return selectRandomPlayers();
     }
 
-    // Select 3 random players with similar values
-    const randomIndex = Math.floor(Math.random() * (availablePlayers.length - 2));
-    const baseValue = availablePlayers[randomIndex].value;
-    
-    const similarValuePlayers = availablePlayers.filter(player => 
-      Math.abs(player.value - baseValue) <= 1000
-    );
+    // Add weighting based on player value
+    const weightedPlayers = availablePlayers.map(player => ({
+      ...player,
+      weight: calculateWeight(player)
+    }));
 
-    if (similarValuePlayers.length >= 3) {
-      // Shuffle and take first 3
-      const shuffled = [...similarValuePlayers].sort(() => 0.5 - Math.random());
-      const selected = shuffled.slice(0, 3);
-      
+    // Select first player using weighted random selection
+    const firstPlayer = selectWeightedRandom(weightedPlayers);
+    const baseValue = firstPlayer.value;
+
+    // Find similar valued players within a range, also considering weights
+    const similarValuePlayers = weightedPlayers
+      .filter(player => 
+        player._id !== firstPlayer._id && 
+        Math.abs(player.value - baseValue) <= 1000
+      );
+
+    if (similarValuePlayers.length >= 2) {
+      // Select two more players using weighted random selection
+      const secondPlayer = selectWeightedRandom(similarValuePlayers);
+      const remainingPlayers = similarValuePlayers.filter(p => p._id !== secondPlayer._id);
+      const thirdPlayer = selectWeightedRandom(remainingPlayers);
+
+      const selected = [firstPlayer, secondPlayer, thirdPlayer];
       setSelectedPlayers(selected);
       setRecentlyUsedPlayers(prev => {
         const newSet = new Set(prev);
@@ -40,9 +50,37 @@ function KeepTradeCut() {
         return newSet;
       });
     } else {
-      // Try again if we couldn't find 3 similar value players
+      // Try again if we couldn't find enough similar value players
       selectRandomPlayers();
     }
+  };
+
+  // Helper function to calculate weight based on player value
+  const calculateWeight = (player) => {
+    let weight = 1;
+    
+    if (player.value >= 9000) weight += 4;
+    else if (player.value >= 8500) weight += 3;
+    else if (player.value >= 8000) weight += 2;
+    else if (player.value >= 7500) weight += 1;
+    
+    // Reduce weight for very low value players and picks
+    if (player.value < 5000) weight *= 0.5;
+    if (player.position === 'PICK') weight *= 0.7;
+    
+    return weight;
+  };
+
+  // Helper function to select a random player based on weights
+  const selectWeightedRandom = (weightedPlayers) => {
+    const totalWeight = weightedPlayers.reduce((sum, p) => sum + p.weight, 0);
+    let random = Math.random() * totalWeight;
+    
+    for (let player of weightedPlayers) {
+      random -= player.weight;
+      if (random <= 0) return player;
+    }
+    return weightedPlayers[0]; // Fallback
   };
 
   useEffect(() => {
