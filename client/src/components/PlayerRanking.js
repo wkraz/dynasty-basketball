@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './PlayerRanking.css';
 
-const POSITIONS = ['C', 'F', 'G', 'GF', 'PF', 'PG', 'SF', 'SG'];
+const POSITIONS = ['C', 'F', 'G', 'GF', 'PF', 'PG', 'SF', 'SG', 'PICK'];
 
 const POSITION_LABELS = {
   'C': 'Center',
@@ -12,7 +12,8 @@ const POSITION_LABELS = {
   'PF': 'Power Forward',
   'PG': 'Point Guard',
   'SF': 'Small Forward',
-  'SG': 'Shooting Guard'
+  'SG': 'Shooting Guard',
+  'PICK': 'Draft Pick'
 };
 
 function PlayerRanking() {
@@ -83,7 +84,7 @@ function PlayerRanking() {
                 [position]: !prev[position]
               }))}
             />
-            {position}
+            {POSITION_LABELS[position]}
           </label>
         ))}
       </div>
@@ -95,7 +96,9 @@ function PlayerRanking() {
               <div className="player-name">{player.name}</div>
               <div className="player-details">
                 <span className="player-position">{player.position}</span>
-                <span className="player-team">{player.current_team}</span>
+                {player.current_team && (
+                  <span className="player-team">{player.current_team}</span>
+                )}
                 <span className="player-value">Value: {player.value}</span>
               </div>
             </div>
