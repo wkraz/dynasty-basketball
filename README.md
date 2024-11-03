@@ -64,17 +64,56 @@ This project is a web application for dynasty fantasy basketball enthusiasts. It
    cd client
    npm start
    ```
-   
-## TODO
-- Implement Keep/Trade/Cut game
-     - Figure out formula for continuously updating value (try and not have to rewrite entire json file)
-- Make home page nice
-     - Add an about section
-- Improve CSS and JS animations (maybe) -> make it look like an actual website
-- Look at more features once the above three are done (maybe league analyzer via sleeper API)
 
 ## Contributing
-(Add contribution guidelines here)
+Contributions are welcome! Here's how you can help:
+
+1. Fork the repository
+2. Create a new branch (`git checkout -b feature/improvement`)
+3. Make your changes
+4. Commit your changes (`git commit -am 'Add new feature'`)
+5. Push to the branch (`git push origin feature/improvement`)
+6. Create a Pull Request
+
+### Contributing Guidelines
+- Follow the existing code style and conventions
+- Write clear, descriptive commit messages
+- Update documentation as needed
+- Add tests for new features
+- Ensure all tests pass before submitting
+- Keep pull requests focused on a single feature or fix
+
+### Bug Reports
+If you find a bug, please create an issue with:
+- A clear description of the problem
+- Steps to reproduce the issue
+- Expected vs actual behavior
+- Screenshots if applicable
+- Your environment details (browser, OS, etc.)
 
 ## License
-(Add license information here)
+This project is licensed under the MIT License - see below for details:
+
+```
+MIT License
+
+Copyright (c) 2024 Will Krzastek
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
