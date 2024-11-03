@@ -52,6 +52,37 @@ function TradeCalculator() {
       !team2Players.includes(player)
     );
 
+  const calculateTeamValue = (teamPlayers, otherTeamPlayers) => {
+    const baseValue = teamPlayers.reduce((sum, player) => sum + player.value, 0);
+    const adjustment = calculateValueAdjustment(teamPlayers, otherTeamPlayers);
+    return {
+      value: baseValue,
+      adjustedValue: baseValue + adjustment
+    };
+  };
+
+  const calculateValueAdjustment = (teamPlayers, otherTeamPlayers) => {
+    if (teamPlayers.length === 0) return 0;
+    
+    const teamValue = teamPlayers.reduce((sum, player) => sum + player.value, 0);
+    const otherTeamValue = otherTeamPlayers.reduce((sum, player) => sum + player.value, 0);
+    
+    // If this team is giving up the best player
+    const bestPlayerInTrade = [...teamPlayers, ...otherTeamPlayers]
+      .sort((a, b) => b.value - a.value)[0];
+    
+    if (teamPlayers.includes(bestPlayerInTrade)) {
+      // Calculate adjustment based on the value gap
+      const valueGap = teamValue - otherTeamValue;
+      if (valueGap > 0) {
+        // Adjustment is roughly 40-50% of the value gap
+        return Math.round(valueGap * 0.45);
+      }
+    }
+    
+    return 0;
+  };
+
   useEffect(() => {
     const { value: value1, adjustedValue: adjustedValue1 } = calculateTeamValue(team1Players, team2Players);
     const { value: value2, adjustedValue: adjustedValue2 } = calculateTeamValue(team2Players, team1Players);
@@ -60,40 +91,38 @@ function TradeCalculator() {
 
     // Suggest players for balancing the trade
     const difference = Math.abs(adjustedValue1 - adjustedValue2);
-    if (difference > 0) {
+    if (difference > 500) {  // Only suggest players if difference is significant
+      const targetValue = difference;
       const suggestedPlayers = allPlayers
-        .filter(player => !team1Players.includes(player) && !team2Players.includes(player))
-        .sort((a, b) => Math.abs(a.value - difference) - Math.abs(b.value - difference))
+        .filter(player => {
+          // Don't suggest players already in the trade
+          if (team1Players.includes(player) || team2Players.includes(player)) return false;
+          
+          // Consider the value adjustment when suggesting players
+          const hypotheticalTeam = adjustedValue1 > adjustedValue2 
+            ? [...team2Players, player]
+            : [...team1Players, player];
+          const otherTeam = adjustedValue1 > adjustedValue2 
+            ? team1Players 
+            : team2Players;
+          
+          const { adjustedValue } = calculateTeamValue(hypotheticalTeam, otherTeam);
+          const newDifference = Math.abs(adjustedValue - (adjustedValue1 > adjustedValue2 ? adjustedValue1 : adjustedValue2));
+          
+          return newDifference < 500; // Suggest players that would make the trade fair
+        })
+        .sort((a, b) => {
+          // Sort by how well they balance the trade
+          const diffA = Math.abs(a.value - targetValue);
+          const diffB = Math.abs(b.value - targetValue);
+          return diffA - diffB;
+        })
         .slice(0, 5);
       setSuggestedPlayers(suggestedPlayers);
     } else {
       setSuggestedPlayers([]);
     }
   }, [team1Players, team2Players, allPlayers]);
-
-  const calculateTeamValue = (teamPlayers, otherTeamPlayers) => {
-    const baseValue = teamPlayers.reduce((sum, player) => sum + player.value, 0);
-    const adjustment = calculateValueAdjustment(teamPlayers.length, otherTeamPlayers.length);
-    return {
-      value: baseValue,
-      adjustedValue: baseValue + adjustment
-    };
-  };
-
-  const calculateValueAdjustment = (total, opposingTotal) => {
-    if (total === 0) return 0;
-    
-    const difference = Math.abs(total - opposingTotal);
-    const higherValue = Math.max(total, opposingTotal);
-    
-    // Base the adjustment on the difference with the opposing side
-    if (total < opposingTotal) {
-      // If this side is losing, add value based on the difference
-      return Math.min(difference * 0.1, 800); // Cap at 800
-    }
-    
-    return 0; // No adjustment if winning
-  };
 
   const getSuggestions = (inputValue) => {
     const inputValueLower = inputValue.trim().toLowerCase();
@@ -195,14 +224,25 @@ function TradeCalculator() {
         <h3>Trade Difference</h3>
         <p>{Math.abs(team1Value - team2Value)}</p>
         {team1Players.length > 0 && team2Players.length > 0 && (
-          <p>{team1Value > team2Value ? "Team 1 wins the trade" : "Team 2 wins the trade"}</p>
+          <>
+            {Math.abs(team1Value - team2Value) <= 500 ? (
+              <p className="fair-trade">This is a fair trade!</p>
+            ) : (
+              <p>{team1Value > team2Value ? "Team 1 wins the trade" : "Team 2 wins the trade"}</p>
+            )}
+          </>
         )}
         {suggestedPlayers.length > 0 && (
           <div>
             <h4>Suggested players to balance the trade:</h4>
             <ul>
               {suggestedPlayers.map((player, index) => (
-                <li key={index}>{player.name} - Value: {player.value}</li>
+                <li key={index}>
+                  {player.name} - Value: {player.value}
+                  <span className="suggestion-note">
+                    (Including value adjustments)
+                  </span>
+                </li>
               ))}
             </ul>
           </div>
