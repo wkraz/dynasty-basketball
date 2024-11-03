@@ -60,7 +60,7 @@ function Home() {
             <h3>Will Krzastek</h3>
             <p>I am a sophomore at the University of Notre Dame who happens to be addicted to fantasy basketball. I also play dynasty football, and use the platform "Keep/Trade/Cut" every day. I noticed
                 there is a severe lack of resources for dynasty basketball, and I wanted to create a platform to fix that. My goal is to provide the community 
-            with rankings we can all trust because we all contribute to them.</p>
+            with rankings we can all trust because we all contribute to them. The more people who use this, the more accurate the rankings will be, so please play Keep/Trade/Cut!</p>
             <div className="my-team">
               <h4>My Dynasty Team (so you can judge my ball knowledge)</h4>
               <ul>
