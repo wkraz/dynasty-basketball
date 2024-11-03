@@ -62,22 +62,30 @@ function TradeCalculator() {
   };
 
   const calculateValueAdjustment = (teamPlayers, otherTeamPlayers) => {
-    if (teamPlayers.length === 0) return 0;
+    // No adjustment if either side is empty or if teams have equal number of players
+    if (teamPlayers.length === 0 || otherTeamPlayers.length === 0 || 
+        teamPlayers.length === otherTeamPlayers.length) {
+      return 0;
+    }
     
-    const teamValue = teamPlayers.reduce((sum, player) => sum + player.value, 0);
-    const otherTeamValue = otherTeamPlayers.reduce((sum, player) => sum + player.value, 0);
+    // Find the highest value player in the trade
+    const allPlayers = [...teamPlayers, ...otherTeamPlayers];
+    const highestValuePlayer = Math.max(...allPlayers.map(p => p.value));
     
-    // If this team is giving up the best player
-    const bestPlayerInTrade = [...teamPlayers, ...otherTeamPlayers]
-      .sort((a, b) => b.value - a.value)[0];
-    
-    if (teamPlayers.includes(bestPlayerInTrade)) {
-      // Calculate adjustment based on the value gap
-      const valueGap = teamValue - otherTeamValue;
-      if (valueGap > 0) {
-        // Adjustment is roughly 40-50% of the value gap
-        return Math.round(valueGap * 0.45);
-      }
+    // If this team has the highest value player AND fewer players
+    if (teamPlayers.length < otherTeamPlayers.length && 
+        teamPlayers.some(p => p.value === highestValuePlayer)) {
+        const difference = Math.abs(teamPlayers.length - otherTeamPlayers.length);
+        
+        // Diminishing returns for each additional player difference
+        let totalAdjustment = 0;
+        for (let i = 0; i < difference; i++) {
+            // Start at 40% and decrease by 7% for each additional player
+            const adjustmentPercent = Math.max(0.40 - (i * 0.07), 0.15);
+            totalAdjustment += highestValuePlayer * adjustmentPercent;
+        }
+        
+        return Math.round(totalAdjustment);
     }
     
     return 0;
@@ -109,7 +117,8 @@ function TradeCalculator() {
           const { adjustedValue } = calculateTeamValue(hypotheticalTeam, otherTeam);
           const newDifference = Math.abs(adjustedValue - (adjustedValue1 > adjustedValue2 ? adjustedValue1 : adjustedValue2));
           
-          return newDifference < 500; // Suggest players that would make the trade fair
+          // Look for players that would make the trade roughly fair
+          return newDifference < 1000; // Increased threshold for better suggestions
         })
         .sort((a, b) => {
           // Sort by how well they balance the trade
