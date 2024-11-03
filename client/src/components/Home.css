@@ -122,3 +122,19 @@
   padding: 10px 0;
   border-bottom: 1px solid #eee;
 }
+
+.website-link {
+  font-weight: normal;
+  color: #666;
+}
+
+.website-link a {
+  color: #2196f3;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.website-link a:hover {
+  color: #1976d2;
+  text-decoration: underline;
+}
