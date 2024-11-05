@@ -189,6 +189,7 @@ function TradeCalculator() {
   return (
     <div className="trade-calculator">
       <h2>Trade Calculator</h2>
+      <p>The scoring for these rankings is a standard 12-team head-to-head points league, so please base your choices off that.</p>
       <div className="teams-container">
         <div className="team">
           <h3>Team 1</h3>

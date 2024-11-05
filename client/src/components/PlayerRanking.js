@@ -64,6 +64,7 @@ function PlayerRanking() {
   return (
     <div className="player-ranking">
       <h2>Player Rankings</h2>
+      <p>The scoring for these rankings is a standard 12-team head-to-head points league, so please base your choices off that.</p>
       <div className="search-bar">
         <input
           type="text"

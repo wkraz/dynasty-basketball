@@ -19,11 +19,11 @@ function Home() {
 
       {/* Why Section */}
       <section className="info-section why-section">
-        <h2>Why Choose Us?</h2>
+        <h2>Why Use Choose Your Hooper?</h2>
         <div className="section-content">
           <p>Our rankings are truly democratic - powered by the dynasty basketball community. 
           We believe that collective wisdom produces the most accurate player valuations, 
-          free from individual bias or manipulation.</p>
+          free from individual bias or manipulation. The more you guys interact with the website, the more accurate the rankings get!</p>
         </div>
       </section>
 
@@ -57,12 +57,12 @@ function Home() {
         <h2>About the Creator</h2>
         <div className="section-content">
           <div className="creator-info">
-          <h3>Will Krzastek - <span className="website-link">· <a href="https://willkrzastek.com" target="_blank" rel="noopener noreferrer">willkrzastek.com</a></span></h3>
+          <h3>Will Krzastek<span className="website-link">· <a href="https://willkrzastek.com" target="_blank" rel="noopener noreferrer">willkrzastek.com</a></span></h3>
             <p>I am a sophomore at the University of Notre Dame who happens to be addicted to fantasy basketball. I also play dynasty football, and use the platform "Keep/Trade/Cut" every day. I noticed
                 there is a severe lack of resources for dynasty basketball, and I wanted to create a platform to fix that. My goal is to provide the community 
             with rankings we can all trust because we all contribute to them. The more people who use this, the more accurate the rankings will be, so please play Keep/Trade/Cut!</p>
             <div className="my-team">
-              <h4>My Dynasty Team (so you can judge my ball knowledge)</h4>
+              <h4>My 12-Team Head-to-head Total Points Dynasty Team (so you can judge my ball knowledge)</h4>
               <ul>
                 <li>Lamelo Ball - PG</li>
                 <li>Cade Cunningham - SG</li>
