@@ -18,10 +18,9 @@ function usePageViews() {
 }
 
 function App() {
-  usePageViews(); // Call the custom hook to track page views
-
   return (
     <Router>
+      <PageViewTracker />
       <div className="app">
         <header>
           <nav>
@@ -59,6 +58,12 @@ function App() {
       </div>
     </Router>
   );
+}
+
+// Create a separate component for tracking page views
+function PageViewTracker() {
+  usePageViews();
+  return null;
 }
 
 export default App;
