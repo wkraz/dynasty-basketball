@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch, Link, useLocation } from 'react-router-dom';
 import Home from './components/Home';
 import PlayerRanking from './components/PlayerRanking';
@@ -6,7 +6,7 @@ import TradeCalculator from './components/TradeCalculator';
 import KeepTradeCut from './components/KeepTradeCut';
 import './App.css';
 
-// Custom hook to track page views - google analytics
+// Custom hook to track page views - Google Analytics
 function usePageViews() {
   const location = useLocation();
 
