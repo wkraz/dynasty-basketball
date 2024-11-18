@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Link, useLocation } from 'react-router-dom';
 import Home from './components/Home';
 import PlayerRanking from './components/PlayerRanking';
 import TradeCalculator from './components/TradeCalculator';
@@ -19,7 +19,7 @@ function usePageViews() {
 
 function App() {
   usePageViews(); // Call the custom hook to track page views
-  
+
   return (
     <Router>
       <div className="app">
