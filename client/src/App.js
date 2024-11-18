@@ -6,7 +6,20 @@ import TradeCalculator from './components/TradeCalculator';
 import KeepTradeCut from './components/KeepTradeCut';
 import './App.css';
 
+// Custom hook to track page views - google analytics
+function usePageViews() {
+  const location = useLocation();
+
+  useEffect(() => {
+    window.gtag('config', 'G-CQNZF6JBEK', {
+      page_path: location.pathname,
+    });
+  }, [location]);
+}
+
 function App() {
+  usePageViews(); // Call the custom hook to track page views
+  
   return (
     <Router>
       <div className="app">
