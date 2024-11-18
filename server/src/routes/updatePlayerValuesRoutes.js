@@ -66,9 +66,9 @@ router.post('/', async (req, res) => {
           const otherRank = ['keep', 'trade', 'cut'].indexOf(otherChoice);
 
           if (currentRank < otherRank && currentPlayer.value < otherPlayer.value) {
-            valueChange += 3;
+            valueChange += 13;
           } else if (currentRank > otherRank && currentPlayer.value > otherPlayer.value) {
-            valueChange -= 3;
+            valueChange -= 13;
           }
         }
       }
