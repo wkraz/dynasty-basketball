@@ -2,8 +2,8 @@
 *.js linguist-language=JavaScript
 
 # Treat CSS and HTML files as part of the repo's web stack
-# *.html linguist-vendored
-# *.css linguist-vendored
+*.html linguist-vendored
+*.css linguist-vendored
 
 # Mark Python files as less relevant (vendored or language override)
 *.py linguist-vendored
