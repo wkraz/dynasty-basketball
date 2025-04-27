@@ -21,7 +21,6 @@ function Footer() {
         <div className="footer-section">
           <h3>Contact</h3>
           <p>Email: wkrzastek05@gmail.com</p>
-          <p>Twitter: @willkraz</p>
         </div>
       </div>
       <div className="footer-bottom">
